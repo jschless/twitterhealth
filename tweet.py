@@ -1,30 +1,31 @@
-from keras.models import Sequential
-from keras.layers import Dense, Activation
 import numpy as np
 import pandas as pd
-import re
-from textblob import TextBlob
+
 
 df = pd.read_csv('C:\\Users\\x92423\\Downloads\\iranian_tweets_csv_hashed\\small.csv')
 ### pick columns of interest from dataset ###
 dataset = df[['follower_count', 'following_count', 'like_count', 'retweet_count']]
 dataset_size = len(df['tweet_text'])
 
+
+
 def processDataSet(path):
     tweets = {}
     users = {}
     df = pd.read_csv(path)
     for row in range(len(df)):
-        tweet = Tweet(df[row])        
+        tweet = Tweet(df.iloc[row])        
         tweets[tweet.tweetid] = tweet
-        users[tweet.userid] = tweet.user 
+        users[tweet.userid] = tweet.user
 
+    for tweetid, tweet in tweets.items():
+        print(str(tweet))
         
 class Tweet:
     def __init__(self, dataframe):
         self.tweetid = dataframe['tweetid']
         self.userid = dataframe['userid']
-        self.user = createUser(dataframe)
+        self.user = User(dataframe)
         self.tweet_language = dataframe['tweet_language']
         self.tweet_text = dataframe['tweet_text']
         self.tweet_time = dataframe['tweet_time']
@@ -44,6 +45,9 @@ class Tweet:
         self.urls = dataframe['urls']
         self.user_mentions = dataframe['user_mentions']
 
+    def __str__(self):
+        return self.tweet_text + " - " + self.user.user_screen_name
+
 class User:
     def __init__(self, dataframe):
         self.userid= dataframe['userid']
@@ -56,3 +60,8 @@ class User:
         self.following_count = dataframe['following_count']
         self.account_creation_date = dataframe['account_creation_date']
         self.account_language = dataframe['account_language']
+
+    def __str__(self):
+        return self.user_display_name
+
+processDataSet('small.csv')
