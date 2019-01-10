@@ -1,14 +1,6 @@
 import numpy as np
 import pandas as pd
 
-
-df = pd.read_csv('C:\\Users\\x92423\\Downloads\\iranian_tweets_csv_hashed\\small.csv')
-### pick columns of interest from dataset ###
-dataset = df[['follower_count', 'following_count', 'like_count', 'retweet_count']]
-dataset_size = len(df['tweet_text'])
-
-
-
 def processDataSet(path):
     tweets = {}
     users = {}
