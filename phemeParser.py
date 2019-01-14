@@ -1,18 +1,29 @@
 #for parsing the PHEME repositiory
 import json
 import os
+import pandas as pd
+from pandas.io.json import json_normalize
 
-annotationFile = 'C:\\Users\\EECS\\Documents\\PHEME\\pheme-rumour-scheme-dataset\\annoations\\en-scheme-annotations.json'
+annotationFile = 'C:\\Users\\EECS\\Documents\\PHEME\\pheme-rumour-scheme-dataset\\annotations\\en-scheme-annotations.json'
+annotationDF = None
+with open(annotationFile) as f:
+    data = []
+    for line in f:
+        if not '#' in line:
+            data.append(json.loads(line))
+    annotationDF = pd.DataFrame(data)
 
-tweetList = []
-#annotationJSON = json.read(annotationFile)
+threadList = []
 
 class Tweet:
-    def __init__(self, text, favCount, retCount, user):
+    def __init__(self, text, favCount, retCount, id, isReply, user):
         self.tweet_text=text
         self.favorite_count = favCount
         self.retCount = retCount
         self.user = user
+        self.id = id
+        self.annotation = annotationDF[annotationDF['tweetid'] == self.id].to_dict()
+        self.isReply = True
 
     def __str__(self):
         return self.tweet_text + ' - ' + self.user.name
@@ -36,18 +47,21 @@ def processCategory(dirName):
         processTweetFolder(dirName + '\\' + tweetFolder, tweetFolder)
 
 def processTweetFolder(dirName, tweetNumber):
-    processTweetJSON(dirName+'\\source-tweets\\' + tweetNumber + '.json')
-    for tweetJSON in os.listdir(dirName + '\\reactions'):
-        processTweetJSON(dirName + '\\reactions\\' + tweetJSON)
+    tweet = processTweetJSON(dirName+'\\source-tweets\\' + tweetNumber + '.json', False)
+    replyList = [processTweetJSON(dirName + '\\reactions\\' + tweetJSON, True) for tweetJSON in os.listdir(dirName + '\\reactions')]
+    threadList.append(tweet)
 
-def processTweetJSON(path):
+def processAnnotationJSON(path):
+    with open(path) as f:
+        return json.load(f)
+
+def processTweetJSON(path, isReply):
     with open(path) as f:
         data = json.load(f)
         userData = data['user']
         user = User(userData['name'], userData['screen_name'], userData['favourites_count'], userData['followers_count'], userData['description'], userData['verified'], userData['friends_count'])
-        tweet = Tweet(data['text'], data['favorite_count'], data['retweet_count'], user)
-        tweetList.append(tweet)
+        tweet = Tweet(data['text'], data['favorite_count'], data['retweet_count'], data['id_str'], isReply, user)
+        tweet.replyList = None
+        return tweet
 
 crawlDirectory('C:\\Users\\EECS\\Documents\\PHEME\\pheme-rumour-scheme-dataset\\threads\\en')
-#crawlDirectory()
-#processTweetJSON('C:\\Users\\EECS\\Documents\\PHEME\\pheme-rumour-scheme-dataset\\threads\\en\\charliehebdo\\552783667052167168\\source-tweets\\552783667052167168.json')
