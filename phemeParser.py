@@ -4,7 +4,14 @@ import os
 import pandas as pd
 from pandas.io.json import json_normalize
 
-annotationFile = 'C:\\Users\\EECS\\Documents\\PHEME\\pheme-rumour-scheme-dataset\\annotations\\en-scheme-annotations.json'
+
+### Replace with location of PHEME dataset. Should be something like C:\...Documents\PHEME ###
+datasetLocation = 'C:\\Users\\EECS\\Documents'
+
+annotationFile = datasetLocation + '\\PHEME\\pheme-rumour-scheme-dataset\\annotations\\en-scheme-annotations.json'
+#annotationFile = 'C:\\Users\\EECS\\Documents\\PHEME\\pheme-rumour-scheme-dataset\\annotations\\en-scheme-annotations.json'
+#rootDir = 'C:\\Users\\EECS\\Documents\\PHEME\\pheme-rumour-scheme-dataset\\threads\\en'
+rootDir = datasetLocation +  '\\PHEME\\pheme-rumour-scheme-dataset\\threads\\en'
 annotationDF = None
 with open(annotationFile) as f:
     data = []
@@ -38,17 +45,17 @@ class User:
         self.verified = verified
         self.friends_count = friends_count
 
-def crawlDirectory(rootDir):
-    for dirName in os.listdir(rootDir):
-        processCategory(rootDir + '\\' + dirName)
+def crawlDirectory(path):
+    for dirName in os.listdir(path):
+        processCategory(path + '\\' + dirName)
 
-def processCategory(dirName):
-    for tweetFolder in os.listdir(dirName):
-        processTweetFolder(dirName + '\\' + tweetFolder, tweetFolder)
+def processCategory(path):
+    for tweetFolder in os.listdir(path):
+        processTweetFolder(path + '\\' + tweetFolder, tweetFolder)
 
-def processTweetFolder(dirName, tweetNumber):
-    tweet = processTweetJSON(dirName+'\\source-tweets\\' + tweetNumber + '.json', False)
-    replyList = [processTweetJSON(dirName + '\\reactions\\' + tweetJSON, True) for tweetJSON in os.listdir(dirName + '\\reactions')]
+def processTweetFolder(path, tweetNumber):
+    tweet = processTweetJSON(path+'\\source-tweets\\' + tweetNumber + '.json', False)
+    replyList = [processTweetJSON(path + '\\reactions\\' + tweetJSON, True) for tweetJSON in os.listdir(path + '\\reactions')]
     threadList.append(tweet)
 
 def processAnnotationJSON(path):
@@ -64,4 +71,4 @@ def processTweetJSON(path, isReply):
         tweet.replyList = None
         return tweet
 
-crawlDirectory('C:\\Users\\EECS\\Documents\\PHEME\\pheme-rumour-scheme-dataset\\threads\\en')
+crawlDirectory(rootDir)
