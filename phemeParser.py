@@ -8,22 +8,7 @@ from itertools import chain
 #Link to PHEME dataset: https://figshare.com/articles/PHEME_rumour_scheme_dataset_journalism_use_case/2068650 #
 
 ### Replace with location of PHEME dataset. Should be something like C:\...Documents\PHEME ###
-datasetLocation = 'C:\\Users\\EECS\\Documents'
-
-annotationFile = datasetLocation + '\\PHEME\\pheme-rumour-scheme-dataset\\annotations\\en-scheme-annotations.json'
-#annotationFile = 'C:\\Users\\EECS\\Documents\\PHEME\\pheme-rumour-scheme-dataset\\annotations\\en-scheme-annotations.json'
-#rootDir = 'C:\\Users\\EECS\\Documents\\PHEME\\pheme-rumour-scheme-dataset\\threads\\en'
-rootDir = datasetLocation +  '\\PHEME\\pheme-rumour-scheme-dataset\\threads\\en'
-
-###loading annotations into global variable###
-
-annotationDF = None
-with open(annotationFile) as f:
-    data = []
-    for line in f:
-        if not '#' in line:
-            data.append(json.loads(line))
-    annotationDF = pd.DataFrame(data)
+pathToPheme = 'C:\\Users\\EECS\\Documents'
 
 class Tweet:
     def __init__(self, text, favCount, retCount, id, isReply, user):
@@ -32,7 +17,6 @@ class Tweet:
         self.retCount = retCount
         self.user = user
         self.id = id
-        self.annotation = annotationDF[annotationDF['tweetid'] == self.id].to_dict()
         self.isReply = True
 
     def __str__(self):
@@ -48,25 +32,43 @@ class User:
         self.verified = verified
         self.friends_count = friends_count
 
-def crawlDirectory(path):
-    return list(chain.from_iterable([processCategory(path + '\\' + dirName) for dirName in os.listdir(path)]))
+''' returns annotations for each tweet '''
+def loadAnnotations(path):
+    annotationFile = path + '\\PHEME\\pheme-rumour-scheme-dataset\\annotations\\en-scheme-annotations.json'
+    with open(annotationFile) as f:
+        data = []
+        for line in f:
+            if not '#' in line:
+                data.append(json.loads(line))
+        return pd.DataFrame(data)
 
-def processCategory(path):
-    return [processTweetFolder(path + '\\' + tweetFolder, tweetFolder) for tweetFolder in os.listdir(path)]
+''' crawls PHEME directory and processes tweets, replies, and annotations'''
+def crawlDirectory(path, annotations):
+    path += '\\PHEME\\pheme-rumour-scheme-dataset\\threads\\en'
+    return list(chain.from_iterable([processCategory(path + '\\' + dirName, annotations) for dirName in os.listdir(path)]))
 
-def processTweetFolder(path, tweetNumber):
-    tweet = processTweetJSON(path+'\\source-tweets\\' + tweetNumber + '.json', False)
-    replyList = [processTweetJSON(path + '\\reactions\\' + tweetJSON, True) for tweetJSON in os.listdir(path + '\\reactions')]
+''' processes each tweet topic '''
+def processCategory(path, annotations):
+    return [processTweetFolder(path + '\\' + tweetFolder, tweetFolder, annotations) for tweetFolder in os.listdir(path)]
+
+''' processes each tweet thread '''
+def processTweetFolder(path, tweetNumber, annotations):
+    tweet = processTweetJSON(path+'\\source-tweets\\' + tweetNumber + '.json', False, annotations)
+    replyList = [processTweetJSON(path + '\\reactions\\' + tweetJSON, True, annotations) for tweetJSON in os.listdir(path + '\\reactions')]
     tweet.replyList = replyList
     return tweet
 
-def processTweetJSON(path, isReply):
+'''processes the individual tweet JSON'''
+def processTweetJSON(path, isReply, annotations):
     with open(path) as f:
         data = json.load(f)
         userData = data['user']
         user = User(userData['name'], userData['screen_name'], userData['favourites_count'], userData['followers_count'], userData['description'], userData['verified'], userData['friends_count'])
         tweet = Tweet(data['text'], data['favorite_count'], data['retweet_count'], data['id_str'], isReply, user)
+        tweet.annotation = annotations[annotations['tweetid'] == tweet.id].to_dict()
         tweet.replyList = None
         return tweet
 
-#crawlDirectory(rootDir)
+''' parses the entire PHEME dataset (main function) '''
+def parsePheme(pathToPheme):
+    crawlDirectory(pathToPheme, loadAnnotations(pathToPheme))
