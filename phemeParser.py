@@ -3,7 +3,9 @@ import json
 import os
 import pandas as pd
 from pandas.io.json import json_normalize
-
+from itertools import chain
+### USER VARIABLES ###
+#Link to PHEME dataset: https://figshare.com/articles/PHEME_rumour_scheme_dataset_journalism_use_case/2068650 #
 
 ### Replace with location of PHEME dataset. Should be something like C:\...Documents\PHEME ###
 datasetLocation = 'C:\\Users\\EECS\\Documents'
@@ -12,6 +14,9 @@ annotationFile = datasetLocation + '\\PHEME\\pheme-rumour-scheme-dataset\\annota
 #annotationFile = 'C:\\Users\\EECS\\Documents\\PHEME\\pheme-rumour-scheme-dataset\\annotations\\en-scheme-annotations.json'
 #rootDir = 'C:\\Users\\EECS\\Documents\\PHEME\\pheme-rumour-scheme-dataset\\threads\\en'
 rootDir = datasetLocation +  '\\PHEME\\pheme-rumour-scheme-dataset\\threads\\en'
+
+###loading annotations into global variable###
+
 annotationDF = None
 with open(annotationFile) as f:
     data = []
@@ -19,8 +24,6 @@ with open(annotationFile) as f:
         if not '#' in line:
             data.append(json.loads(line))
     annotationDF = pd.DataFrame(data)
-
-threadList = []
 
 class Tweet:
     def __init__(self, text, favCount, retCount, id, isReply, user):
@@ -46,21 +49,16 @@ class User:
         self.friends_count = friends_count
 
 def crawlDirectory(path):
-    for dirName in os.listdir(path):
-        processCategory(path + '\\' + dirName)
+    return list(chain.from_iterable([processCategory(path + '\\' + dirName) for dirName in os.listdir(path)]))
 
 def processCategory(path):
-    for tweetFolder in os.listdir(path):
-        processTweetFolder(path + '\\' + tweetFolder, tweetFolder)
+    return [processTweetFolder(path + '\\' + tweetFolder, tweetFolder) for tweetFolder in os.listdir(path)]
 
 def processTweetFolder(path, tweetNumber):
     tweet = processTweetJSON(path+'\\source-tweets\\' + tweetNumber + '.json', False)
     replyList = [processTweetJSON(path + '\\reactions\\' + tweetJSON, True) for tweetJSON in os.listdir(path + '\\reactions')]
-    threadList.append(tweet)
-
-def processAnnotationJSON(path):
-    with open(path) as f:
-        return json.load(f)
+    tweet.replyList = replyList
+    return tweet
 
 def processTweetJSON(path, isReply):
     with open(path) as f:
