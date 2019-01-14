@@ -71,4 +71,4 @@ def processTweetJSON(path, isReply, annotations):
 
 ''' parses the entire PHEME dataset (main function) '''
 def parsePheme(pathToPheme):
-    crawlDirectory(pathToPheme, loadAnnotations(pathToPheme))
+    return crawlDirectory(pathToPheme, loadAnnotations(pathToPheme))
