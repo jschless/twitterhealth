@@ -4,6 +4,14 @@
 ## Goal
 We are creating a classifier for tweets to help users determine the credibility / reliability of a tweet. Ultimately, we will be able to classify tweets based on their text, associated users, and the associated tweet network. Using Twitter's streaming API, we will produce a GUI that allows a user to interact with Twitter while being warned of the potential dangers.
 
+
+## Dataset
+We use the PHEME dataset in this project. The dataset can be found here: [https://figshare.com/articles/PHEME_rumour_scheme_dataset_journalism_use_case/2068650]
+
+## Files
+- phemeParser.py : This file processes the PHEME dataset into a workable python datastructure
+- classifier.py : This file trains the dataset according to a number of features
+
 ## Contributors
 - Pat Cowley
 - Grayson Osborne
