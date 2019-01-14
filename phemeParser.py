@@ -69,4 +69,4 @@ def processTweetJSON(path, isReply):
         tweet.replyList = None
         return tweet
 
-crawlDirectory(rootDir)
+#crawlDirectory(rootDir)
