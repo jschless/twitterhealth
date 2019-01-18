@@ -17,10 +17,22 @@ class Tweet:
         self.retCount = retCount
         self.user = user
         self.id = id
-        self.isReply = True
+        self.isReply = isReply
+        self.replyList = None
+        self.annotation = None
 
     def __str__(self):
         return self.tweet_text + ' - ' + self.user.name
+
+    def to_dict(self):
+        return {
+            'tweet_text' : self.tweet_text,
+            'favorite_count' : self.favorite_count,
+            'ret_count' : self.retCount,
+            'user' : self.user,
+            'id' : self.id,
+            'reply' : self.isReply,
+        }
 
 class User:
     def __init__(self, name, screenName, favorite_count, follower_count, description, verified, friends_count):
@@ -65,7 +77,7 @@ def processTweetJSON(path, isReply, annotations):
         userData = data['user']
         user = User(userData['name'], userData['screen_name'], userData['favourites_count'], userData['followers_count'], userData['description'], userData['verified'], userData['friends_count'])
         tweet = Tweet(data['text'], data['favorite_count'], data['retweet_count'], data['id_str'], isReply, user)
-        tweet.annotation = annotations[annotations['tweetid'] == tweet.id].to_dict()
+        tweet.annotation = annotations[annotations['tweetid'] == tweet.id].to_dict('r') #keeps dataframe id out of the mix
         tweet.replyList = None
         return tweet
 
