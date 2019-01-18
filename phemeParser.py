@@ -57,18 +57,38 @@ def loadAnnotations(path):
 ''' crawls PHEME directory and processes tweets, replies, and annotations'''
 def crawlDirectory(path, annotations):
     path += '\\PHEME\\pheme-rumour-scheme-dataset\\threads\\en'
-    return list(chain.from_iterable([processCategory(path + '\\' + dirName, annotations) for dirName in os.listdir(path)]))
+    #temp = [processCategory(path + '\\' + dirName, annotations) for dirName in os.listdir(path)]
+    #temp = list(chain.from_iterable([processCategory(path + '\\' + dirName, annotations) for dirName in os.listdir(path)]))
 
-''' processes each tweet topic '''
+    allThreads = []
+    allTweets = []
+    for threads, tweets in [processCategory(path + '\\' + dirName, annotations) for dirName in os.listdir(path)]:
+        allThreads += threads
+        allTweets += tweets
+    return threads, allTweets
+
 def processCategory(path, annotations):
-    return [processTweetFolder(path + '\\' + tweetFolder, tweetFolder, annotations) for tweetFolder in os.listdir(path)]
+    ''' processes each tweet topic
+    output: List[thread, allTweets]
+    '''
+    threads = []
+    allTweets = []
+    for thread, tweets in [processTweetFolder(path + '\\' + tweetFolder, tweetFolder, annotations) for tweetFolder in os.listdir(path)]:
+        threads.append(thread)
+        allTweets += tweets
+    return threads, allTweets
 
-''' processes each tweet thread '''
 def processTweetFolder(path, tweetNumber, annotations):
-    tweet = processTweetJSON(path+'\\source-tweets\\' + tweetNumber + '.json', False, annotations)
+    ''' processes each tweet thread
+    output: single tweet (Source of thread, all tweets in the thread)
+    '''
+
+    thread = processTweetJSON(path+'\\source-tweets\\' + tweetNumber + '.json', False, annotations)
+    allTweets = [thread]
     replyList = [processTweetJSON(path + '\\reactions\\' + tweetJSON, True, annotations) for tweetJSON in os.listdir(path + '\\reactions')]
-    tweet.replyList = replyList
-    return tweet
+    allTweets += replyList
+    thread.replyList = replyList
+    return thread, allTweets
 
 '''processes the individual tweet JSON'''
 def processTweetJSON(path, isReply, annotations):
@@ -78,7 +98,6 @@ def processTweetJSON(path, isReply, annotations):
         user = User(userData['name'], userData['screen_name'], userData['favourites_count'], userData['followers_count'], userData['description'], userData['verified'], userData['friends_count'])
         tweet = Tweet(data['text'], data['favorite_count'], data['retweet_count'], data['id_str'], isReply, user)
         tweet.annotation = annotations[annotations['tweetid'] == tweet.id].to_dict('r') #keeps dataframe id out of the mix
-        tweet.replyList = None
         return tweet
 
 ''' parses the entire PHEME dataset (main function) '''

@@ -17,6 +17,10 @@ def initializeOutput(listOfThreads):
     y['certainty'] = y['certainty'].apply(lambda x: classificationMap[x])
     return y['certainty']
 
+def crossValidation(X, y):
+    print('todo')
+    # for selecting hyperparameters TODO
+
 def run(listOfThreads):
     X = initializeInput(listOfThreads)
     y = initializeOutput(listOfThreads)
@@ -24,4 +28,8 @@ def run(listOfThreads):
     clf.fit(X, y)
     print('score is ' + str(clf.score(X,y)))
 
-run(threadList = phemeParser.parsePheme(pathToPheme))
+def main():
+    threadList, tweetList = phemeParser.parsePheme(pathToPheme)
+    run(threadList)
+
+main()
