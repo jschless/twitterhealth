@@ -6,17 +6,22 @@ import phemeParser
 from sklearn.neural_network import MLPClassifier
 
 pathToPheme = 'C:\\Users\\EECS\\Documents'
-
-threadList = phemeParser.parsePheme(pathToPheme)
-
 classificationMap = {'certain': 2, 'somewhat-certain':1, 'uncertain':0, 'underspecified': -1}
 
 def initializeInput(listOfThreads):
     X = pd.DataFrame.from_records([thread.to_dict() for thread in listOfThreads])
+    return X[['favorite_count', 'ret_count']]
 
+def initializeOutput(listOfThreads):
     y = pd.DataFrame.from_dict([thread.annotation[0] for thread in listOfThreads], orient = 'columns')
     y['certainty'] = y['certainty'].apply(lambda x: classificationMap[x])
-    print(y.head())
+    return y['certainty']
 
+def run(listOfThreads):
+    X = initializeInput(listOfThreads)
+    y = initializeOutput(listOfThreads)
+    clf = MLPClassifier(solver='lbfgs')
+    clf.fit(X, y)
+    print('score is ' + str(clf.score(X,y)))
 
-initializeInput(threadList)
+run(threadList = phemeParser.parsePheme(pathToPheme))
