@@ -4,47 +4,13 @@ import os
 import pandas as pd
 from pandas.io.json import json_normalize
 from itertools import chain
+from tweet import *
 ### USER VARIABLES ###
 #Link to PHEME dataset: https://figshare.com/articles/PHEME_rumour_scheme_dataset_journalism_use_case/2068650 #
 
 ### Replace with location of PHEME dataset. Should be something like C:\...Documents\PHEME ###
 pathToPheme = 'C:\\Users\\EECS\\Documents'
 
-class Tweet:
-    def __init__(self, text, favCount, retCount, id, isReply, user):
-        self.tweet_text=text
-        self.favorite_count = favCount
-        self.retCount = retCount
-        self.user = user
-        self.id = id
-        self.isReply = isReply
-        self.replyList = None
-        self.annotation = None
-
-    def __str__(self):
-        return self.tweet_text + ' - ' + self.user.name
-
-    def to_dict(self):
-        return {
-            'tweet_text' : self.tweet_text,
-            'favorite_count' : self.favorite_count,
-            'ret_count' : self.retCount,
-            'user' : self.user,
-            'tweetid' : self.id,
-            'reply' : self.isReply,
-            'annotation' : self.annotation,
-            'replyList' : self.replyList
-        }
-
-class User:
-    def __init__(self, name, screenName, favorite_count, follower_count, description, verified, friends_count):
-        self.name = name
-        self.screenName = screenName
-        self.favorite_count = favorite_count
-        self.follower_count = follower_count
-        self.description = description
-        self.verified = verified
-        self.friends_count = friends_count
 
 ''' returns annotations for each tweet '''
 def loadAnnotations(path):

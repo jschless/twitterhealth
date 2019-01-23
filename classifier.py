@@ -60,4 +60,4 @@ def run(listOfThreads):
 def main():
     threadList, tweetList = phemeParser.parsePheme(pathToPheme)
     run(tweetList)
-main()
+#main()
