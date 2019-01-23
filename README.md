@@ -6,7 +6,7 @@ We are creating a classifier for tweets to help users determine the credibility 
 
 
 ## Dataset
-We use the PHEME dataset in this project. The dataset can be found here: [https://figshare.com/articles/PHEME_rumour_scheme_dataset_journalism_use_case/2068650]
+We use the PHEME dataset in this project. The dataset can be found here: [PHEME](https://figshare.com/articles/PHEME_rumour_scheme_dataset_journalism_use_case/2068650)
 
 ## Files
 - tweet.py : This file defines the Tweet and User data structure along with some useful functions
