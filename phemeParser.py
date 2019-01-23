@@ -30,8 +30,10 @@ class Tweet:
             'favorite_count' : self.favorite_count,
             'ret_count' : self.retCount,
             'user' : self.user,
-            'id' : self.id,
+            'tweetid' : self.id,
             'reply' : self.isReply,
+            'annotation' : self.annotation,
+            'replyList' : self.replyList
         }
 
 class User:
