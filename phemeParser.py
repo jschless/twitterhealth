@@ -20,11 +20,7 @@ def loadAnnotations(path):
 
     annotationFile = path + '\\PHEME\\pheme-rumour-scheme-dataset\\annotations\\en-scheme-annotations.json'
     with open(annotationFile) as f:
-        data = []
-        for line in f:
-            if not '#' in line:
-                data.append(json.loads(line))
-        return pd.DataFrame(data)
+        return [json.loads(file) for line in f if not '#' in line]
 
 def crawlDirectory(path, annotations):
     """crawls PHEME directory and returns list of all conversation threads
@@ -104,3 +100,5 @@ def parsePheme(pathToPheme):
     pathToPheme -- path to PHEME dataset
     """
     return crawlDirectory(pathToPheme, loadAnnotations(pathToPheme))
+
+parsePheme(pathToPheme)
