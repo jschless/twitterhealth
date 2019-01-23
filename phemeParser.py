@@ -1,4 +1,3 @@
-#for parsing the PHEME repositiory
 import json
 import os
 import pandas as pd
@@ -12,8 +11,13 @@ from tweet import *
 pathToPheme = 'C:\\Users\\EECS\\Documents'
 
 
-''' returns annotations for each tweet '''
 def loadAnnotations(path):
+    """Returns annotation dataframe for all tweets in PHEME dataset
+
+    Keyword arguments:
+    path -- path to the location of the PHEME dataset
+    """
+
     annotationFile = path + '\\PHEME\\pheme-rumour-scheme-dataset\\annotations\\en-scheme-annotations.json'
     with open(annotationFile) as f:
         data = []
@@ -22,8 +26,15 @@ def loadAnnotations(path):
                 data.append(json.loads(line))
         return pd.DataFrame(data)
 
-''' crawls PHEME directory and processes tweets, replies, and annotations'''
 def crawlDirectory(path, annotations):
+    """crawls PHEME directory and returns list of all conversation threads
+
+    Keyword arguments:
+    path -- path to directory
+    annotations -- dataframe of all annotations
+    """
+
+
     path += '\\PHEME\\pheme-rumour-scheme-dataset\\threads\\en'
     #temp = [processCategory(path + '\\' + dirName, annotations) for dirName in os.listdir(path)]
     #temp = list(chain.from_iterable([processCategory(path + '\\' + dirName, annotations) for dirName in os.listdir(path)]))
@@ -36,9 +47,12 @@ def crawlDirectory(path, annotations):
     return threads, allTweets
 
 def processCategory(path, annotations):
-    ''' processes each tweet topic
-    output: List[thread, allTweets]
-    '''
+    """Processes a PHEME tweet topic
+
+    Keyword arguments:
+    path -- path to the topics
+    annotations -- dataframe of all annotations
+    """
     threads = []
     allTweets = []
     for thread, tweets in [processTweetFolder(path + '\\' + tweetFolder, tweetFolder, annotations) for tweetFolder in os.listdir(path)]:
@@ -46,30 +60,47 @@ def processCategory(path, annotations):
         allTweets += tweets
     return threads, allTweets
 
-def processTweetFolder(path, tweetNumber, annotations):
-    ''' processes each tweet thread
-    output: single tweet (Source of thread, all tweets in the thread)
-    '''
+def processTweetFolder(path, tweetid, annotations):
+    """Processes an entire thread and returns a tweet with all replies
 
-    thread = processTweetJSON(path+'\\source-tweets\\' + tweetNumber + '.json', False, annotations)
+
+    Keyword arguments:
+    path -- path to threads
+    tweetid -- tweetid of thread
+    annotations -- dataframe of all annotations
+    """
+
+    thread = processTweetJSON(path+'\\source-tweets\\' + tweetid + '.json', False, annotations)
     allTweets = [thread]
     replyList = [processTweetJSON(path + '\\reactions\\' + tweetJSON, True, annotations) for tweetJSON in os.listdir(path + '\\reactions')]
     allTweets += replyList
     thread.replyList = replyList
     return thread, allTweets
 
-'''processes the individual tweet JSON'''
-def processTweetJSON(path, isReply, annotations):
+def processTweetJSON(path, is_reply, annotations):
+    """Processes and returns an individual tweet JSON
+
+
+    Keyword arguments:
+    path -- path to JSON
+    is_reply -- boolean denoting whether tweet is a reply
+    annotations -- dataframe of all annotations
+    """
+
     with open(path) as f:
         data = json.load(f)
         userData = data['user']
         user = User()
         tweet = Tweet()
         user.phemeUser(userData['name'], userData['screen_name'], userData['favourites_count'], userData['followers_count'], userData['description'], userData['verified'], userData['friends_count'])
-        tweet.phemeTweet(data['text'], data['favorite_count'], data['retweet_count'], data['id_str'], isReply, user)
+        tweet.phemeTweet(data['text'], data['favorite_count'], data['retweet_count'], data['id_str'], is_reply, user)
         tweet.annotation = annotations[annotations['tweetid'] == tweet.tweetid].to_dict('r') #keeps dataframe id out of the mix
         return tweet
 
-''' parses the entire PHEME dataset (main function) '''
 def parsePheme(pathToPheme):
+    """Parses PHEME dataset and returns a list of all conversation threads
+
+    Keyword arguments:
+    pathToPheme -- path to PHEME dataset
+    """
     return crawlDirectory(pathToPheme, loadAnnotations(pathToPheme))
