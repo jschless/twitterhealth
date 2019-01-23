@@ -63,9 +63,11 @@ def processTweetJSON(path, isReply, annotations):
     with open(path) as f:
         data = json.load(f)
         userData = data['user']
-        user = User(userData['name'], userData['screen_name'], userData['favourites_count'], userData['followers_count'], userData['description'], userData['verified'], userData['friends_count'])
-        tweet = Tweet(data['text'], data['favorite_count'], data['retweet_count'], data['id_str'], isReply, user)
-        tweet.annotation = annotations[annotations['tweetid'] == tweet.id].to_dict('r') #keeps dataframe id out of the mix
+        user = User()
+        tweet = Tweet()
+        user.phemeUser(userData['name'], userData['screen_name'], userData['favourites_count'], userData['followers_count'], userData['description'], userData['verified'], userData['friends_count'])
+        tweet.phemeTweet(data['text'], data['favorite_count'], data['retweet_count'], data['id_str'], isReply, user)
+        tweet.annotation = annotations[annotations['tweetid'] == tweet.tweetid].to_dict('r') #keeps dataframe id out of the mix
         return tweet
 
 ''' parses the entire PHEME dataset (main function) '''

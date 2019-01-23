@@ -37,6 +37,7 @@ def kfold(mod, X, y, n_splits=5):
     print('best score was %s\n worst score was %s' % (best, worst))
     confusionMat.plot()
     plt.show()
+    return bestMod
 
 def initializeDataset(data):
     inputs = pd.DataFrame.from_records([thread.to_dict() for thread in data if len(thread.annotation) > 0]).set_index('tweetid')
@@ -47,17 +48,29 @@ def initializeDataset(data):
 
 def buildInputAndLabels(data, label='certainty'):
     data = data.dropna(subset=[label])
-    X = data[['favorite_count', 'ret_count']]
+    X = data[['favorite_count', 'retweet_count']]
     y = data[label].apply(lambda x: classificationMap[x])
     return X, y
 
-def run(listOfThreads):
+def buildInput(data):
+    return data[['favorite_count', 'retweet_count']]
+
+def run(listOfThreads, testTweets):
+    '''
+    listOfThreads: input from PHEME to train datasets
+    testTweets: list of Tweets to predict on
+    '''
     data = initializeDataset(listOfThreads)
     X, y = buildInputAndLabels(data)
     clf = MLPClassifier(solver='lbfgs')
-    kfold(clf, X, y, 5)
+    model = kfold(clf, X, y, 5)
+    if testTweets is not None:
+        model.predict(listToDF(testTweets))
 
-def main():
+def listToDF(inList):
+    return buildInput(pd.DataFrame.from_records([tweet.to_dict() for tweet in inList]))
+
+def main(testTweets=None):
     threadList, tweetList = phemeParser.parsePheme(pathToPheme)
-    run(tweetList)
+    run(tweetList, testTweets)
 #main()

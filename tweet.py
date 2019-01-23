@@ -1,18 +1,21 @@
 class Tweet:
-    def __init__(self, text, favCount, retCount, id, isReply, user):
+    def __init__(self):
+        self.reply_list = None
+        self.annotation = None
+
+    def phemeTweet(self, text, favCount, retCount, id, isReply, user):
         self.tweet_text=text
         self.favorite_count = favCount
         self.retweet_count = retCount
         self.user = user
         self.tweetid = id
         self.is_reply = isReply
-        self.reply_list = None
-        self.annotation = None
 
-    def __init__(self, dataframe):
+    def dfTweet(self, dataframe):
         self.tweetid = dataframe['tweetid']
         self.userid = dataframe['userid']
-        self.user = User(dataframe)
+        self.user = User()
+        self.user.dfUser(dataframe)
         self.tweet_language = dataframe['tweet_language']
         self.tweet_text = dataframe['tweet_text']
         self.tweet_time = dataframe['tweet_time']
@@ -31,6 +34,7 @@ class Tweet:
         self.hashtags = dataframe['hashtags']
         self.urls = dataframe['urls']
         self.user_mentions = dataframe['user_mentions']
+        self.is_reply = (self.in_reply_to_userid is not None)
 
     def __str__(self):
         return self.tweet_text + ' - ' + self.user.name
@@ -39,16 +43,16 @@ class Tweet:
         return {
             'tweet_text' : self.tweet_text,
             'favorite_count' : self.favorite_count,
-            'ret_count' : self.retCount,
+            'retweet_count' : self.retweet_count,
             'user' : self.user,
-            'tweetid' : self.id,
-            'reply' : self.isReply,
+            'tweetid' : self.tweetid,
+            'reply' : self.is_reply,
             'annotation' : self.annotation,
-            'replyList' : self.replyList
+            'replyList' : self.reply_list
         }
 
 class User:
-    def __init__(self, name, screenName, favorite_count, follower_count, description, verified, friends_count):
+    def phemeUser(self, name, screenName, favorite_count, follower_count, description, verified, friends_count):
         self.display_name = name
         self.screen_name = screenName
         self.favorite_count = favorite_count
@@ -57,7 +61,7 @@ class User:
         self.verified = verified
         self.friends_count = friends_count
 
-    def __init__(self, dataframe):
+    def dfUser(self, dataframe):
         self.userid= dataframe['userid']
         self.display_name = dataframe['user_display_name']
         self.screen_name = dataframe['user_screen_name']
@@ -68,15 +72,3 @@ class User:
         self.following_count = dataframe['following_count']
         self.account_creation_date = dataframe['account_creation_date']
         self.account_language = dataframe['account_language']
-
-def processDataSet(path):
-    tweets = {}
-    users = {}
-    df = pd.read_csv(path)
-    for row in range(len(df)):
-        tweet = Tweet(df.iloc[row])
-        tweets[tweet.tweetid] = tweet
-        users[tweet.userid] = tweet.user
-
-    for tweetid, tweet in tweets.items():
-        print(str(tweet))

@@ -9,4 +9,8 @@ data = pd.read_csv('small.csv')
 
 tweetList = []
 for row in range(len(data)):
-    tweetList.append(Tweet(data.iloc[row]))
+    tweet = Tweet()
+    tweet.dfTweet(data.iloc[row])
+    tweetList.append(tweet)
+
+classifier.main(tweetList)
