@@ -9,15 +9,15 @@ We are creating a classifier for tweets to help users determine the credibility 
 We use the PHEME dataset in this project. The dataset can be found here: [https://figshare.com/articles/PHEME_rumour_scheme_dataset_journalism_use_case/2068650]
 
 ## Files
--tweet.py : This file defines the Tweet and User data structure along with some useful functions
--phemeParser.py : This file processes the PHEME dataset into a list of annotated conversation threads
--classifier.py : This file trains a classifier on the PHEME dataset according to features
--tester.py : This file supports classifying new datasets according to our classifier
+- tweet.py : This file defines the Tweet and User data structure along with some useful functions
+- phemeParser.py : This file processes the PHEME dataset into a list of annotated conversation threads
+- classifier.py : This file trains a classifier on the PHEME dataset according to features
+- tester.py : This file supports classifying new datasets according to our classifier
 
 ## Folders
--Datasets: contains information on the datasets of this project as well as some small sets, like the Iranian fake news tweets
+- Datasets: contains information on the datasets of this project as well as some small sets, like the Iranian fake news tweets
 
--Scratchwork: This folder contains some scratch work.
+- Scratchwork: This folder contains some scratch work.
 ## Contributors
 - Pat Cowley
 - Grayson Osborne
