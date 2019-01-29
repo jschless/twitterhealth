@@ -11,7 +11,9 @@ from anytree import Node, RenderTree
 
 ### Replace with location of PHEME dataset. Should be something like C:\...Documents\PHEME ###
 pathToPheme = 'C:\\Users\\EECS\\Documents'
-
+annotationFile = pathToPheme + '\\PHEME\\pheme-rumour-scheme-dataset\\annotations\\en-scheme-annotations.json'
+with open(annotationFile) as f:
+    annotations = pd.DataFrame([json.loads(line) for line in f if not '#' in line])
 
 def loadAnnotations(path):
     """Returns annotation dataframe for all tweets in PHEME dataset
@@ -24,50 +26,45 @@ def loadAnnotations(path):
     with open(annotationFile) as f:
         return pd.DataFrame([json.loads(line) for line in f if not '#' in line])
 
-def crawlDirectory(path, annotations):
+def crawlDirectory(path):
     """crawls PHEME directory and returns list of all conversation threads
 
     Keyword arguments:
     path -- path to directory
-    annotations -- dataframe of all annotations
     """
     path += '\\PHEME\\pheme-rumour-scheme-dataset\\threads\\en'
-    allThreads, allTweets = [], []
+    allThreads= []
 
-    for threads, tweets in [processCategory(path + '\\' + dirName, annotations) for dirName in os.listdir(path)]:
+    for threads in [processCategory(path + '\\' + dirName) for dirName in os.listdir(path)]:
         allThreads += threads
-        allTweets += tweets
+    return threads
 
-    return threads, allTweets
-
-def processCategory(path, annotations):
+def processCategory(path):
     """Processes a PHEME tweet topic
 
     Keyword arguments:
     path -- path to the topics
-    annotations -- dataframe of all annotations
     """
-    return [thread for thread in [processTweetFolder(path + '\\' + tweetFolder, tweetFolder, annotations) for tweetFolder in os.listdir(path)]]
+    return [thread for thread in [processTweetFolder(path + '\\' + tweetFolder, tweetFolder) for tweetFolder in os.listdir(path)]]
 
-def processTweetFolder(path, tweetid, annotations):
+def processTweetFolder(path, tweetid):
     """Processes an entire thread and returns a tweet with all replies
 
     Keyword arguments:
     path -- path to threads
     tweetid -- tweetid of thread
-    annotations -- dataframe of all annotations
     """
-    thread = processTweetJSON(path+'\\source-tweets\\' + tweetid + '.json', False, annotations)
+    thread = processTweetJSON(path+'\\source-tweets\\' + tweetid + '.json', False)
     with open(path +  '\\annotation.json') as f:
         thread.thread_annotation = json.load(f)
     with open(path +  '\\structure.json') as f:
         thread.thread_structure = json.load(f)
-    root = Node(str(tweetid), tweet=root)
-    processTree(thread.thread_structure[tweetid], root, path + '\\reactions\\', annotations)
+    root = Node(str(tweetid), tweet=thread)
+    processTree(thread.thread_structure[tweetid], root, path + '\\reactions\\')
     thread.reply_chain = root
     return thread
 
-def processTree(children, parent, path, annotations):
+def processTree(children, parent, path):
     """Returns tree of replies
 
     Keyword arguments:
@@ -77,16 +74,15 @@ def processTree(children, parent, path, annotations):
     if not children:
         return
     for key, value in children.items():
-        temp = Node(key, parent=parent, tweet=processTweetJSON(path + key + '.json', True, annotations))
-        processTree(value, temp, path, annotations)
+        temp = Node(key, parent=parent, tweet=processTweetJSON(path + key + '.json', True))
+        processTree(value, temp, path)
 
-def processTweetJSON(path, is_reply, annotations):
+def processTweetJSON(path, is_reply):
     """Processes and returns an individual tweet JSON
 
     Keyword arguments:
     path -- path to JSON
     is_reply -- boolean denoting whether tweet is a reply
-    annotations -- dataframe of all annotations
     """
 
     with open(path) as f:
@@ -105,5 +101,6 @@ def parsePheme(pathToPheme):
     Keyword arguments:
     pathToPheme -- path to PHEME dataset
     """
-    return crawlDirectory(pathToPheme, loadAnnotations(pathToPheme))
+    annotations = loadAnnotations(pathToPheme)
+    return crawlDirectory(pathToPheme)
 parsePheme(pathToPheme)
