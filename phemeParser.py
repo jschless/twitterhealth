@@ -20,7 +20,7 @@ def loadAnnotations(path):
 
     annotationFile = path + '\\PHEME\\pheme-rumour-scheme-dataset\\annotations\\en-scheme-annotations.json'
     with open(annotationFile) as f:
-        return [json.loads(file) for line in f if not '#' in line]
+        return pd.DataFrame([json.loads(line) for line in f if not '#' in line])
 
 def crawlDirectory(path, annotations):
     """crawls PHEME directory and returns list of all conversation threads
@@ -29,17 +29,13 @@ def crawlDirectory(path, annotations):
     path -- path to directory
     annotations -- dataframe of all annotations
     """
-
-
     path += '\\PHEME\\pheme-rumour-scheme-dataset\\threads\\en'
-    #temp = [processCategory(path + '\\' + dirName, annotations) for dirName in os.listdir(path)]
-    #temp = list(chain.from_iterable([processCategory(path + '\\' + dirName, annotations) for dirName in os.listdir(path)]))
+    allThreads, allTweets = [], []
 
-    allThreads = []
-    allTweets = []
     for threads, tweets in [processCategory(path + '\\' + dirName, annotations) for dirName in os.listdir(path)]:
         allThreads += threads
         allTweets += tweets
+
     return threads, allTweets
 
 def processCategory(path, annotations):
@@ -75,7 +71,6 @@ def processTweetFolder(path, tweetid, annotations):
 
 def processTweetJSON(path, is_reply, annotations):
     """Processes and returns an individual tweet JSON
-
 
     Keyword arguments:
     path -- path to JSON
