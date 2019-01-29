@@ -4,6 +4,8 @@ import pandas as pd
 from pandas.io.json import json_normalize
 from itertools import chain
 from tweet import *
+from anytree import Node, RenderTree
+
 ### USER VARIABLES ###
 #Link to PHEME dataset: https://figshare.com/articles/PHEME_rumour_scheme_dataset_journalism_use_case/2068650 #
 
@@ -61,13 +63,45 @@ def processTweetFolder(path, tweetid, annotations):
     tweetid -- tweetid of thread
     annotations -- dataframe of all annotations
     """
-
     thread = processTweetJSON(path+'\\source-tweets\\' + tweetid + '.json', False, annotations)
+    with open(path +  '\\annotation.json') as f:
+        thread.threadAnnotation = json.load(f)
     allTweets = [thread]
     replyList = [processTweetJSON(path + '\\reactions\\' + tweetJSON, True, annotations) for tweetJSON in os.listdir(path + '\\reactions')]
+    replyChain = processReplies(path, tweetid, annotations, thread)
     allTweets += replyList
     thread.replyList = replyList
     return thread, allTweets
+
+def processReplies(path, tweetid, annotations, root):
+    """Creates a tree structure out of replies
+
+    Keyword arguments:
+    path -- path to JSON
+    is_reply -- boolean denoting whether tweet is a reply
+    annotations -- dataframe of all annotations
+    """
+    structure = None
+    with open(path + '\\structure.json') as f:
+        structure = json.load(f)
+    root = Node(str(tweetid), tweet=root)
+    processTree(structure[tweetid], root, path + '\\reactions\\', annotations)
+    #for pre, _, node in RenderTree(root):
+    #    print('-'*len(pre) + node.name)
+    return root
+
+def processTree(children, parent, path, annotations):
+    """Returns tree of replies
+
+    Keyword arguments:
+    children -- dictionary of children remaining
+    parent -- Node of parent
+    """
+    if not children:
+        return
+    for key, value in children.items():
+        temp = Node(key, parent=parent, tweet=processTweetJSON(path + key + '.json', True, annotations))
+        processTree(value, temp, path, annotations)
 
 def processTweetJSON(path, is_reply, annotations):
     """Processes and returns an individual tweet JSON
@@ -95,3 +129,4 @@ def parsePheme(pathToPheme):
     pathToPheme -- path to PHEME dataset
     """
     return crawlDirectory(pathToPheme, loadAnnotations(pathToPheme))
+parsePheme(pathToPheme)
