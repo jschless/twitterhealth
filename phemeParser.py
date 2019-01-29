@@ -95,5 +95,3 @@ def parsePheme(pathToPheme):
     pathToPheme -- path to PHEME dataset
     """
     return crawlDirectory(pathToPheme, loadAnnotations(pathToPheme))
-
-parsePheme(pathToPheme)
