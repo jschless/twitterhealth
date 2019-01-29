@@ -37,7 +37,7 @@ def crawlDirectory(path):
 
     for threads in [processCategory(path + '\\' + dirName) for dirName in os.listdir(path)]:
         allThreads += threads
-    return threads
+    return allThreads
 
 def processCategory(path):
     """Processes a PHEME tweet topic
@@ -45,7 +45,7 @@ def processCategory(path):
     Keyword arguments:
     path -- path to the topics
     """
-    return [thread for thread in [processTweetFolder(path + '\\' + tweetFolder, tweetFolder) for tweetFolder in os.listdir(path)]]
+    return [processTweetFolder(path + '\\' + tweetFolder, tweetFolder) for tweetFolder in os.listdir(path)]
 
 def processTweetFolder(path, tweetid):
     """Processes an entire thread and returns a tweet with all replies
@@ -103,4 +103,5 @@ def parsePheme(pathToPheme):
     """
     annotations = loadAnnotations(pathToPheme)
     return crawlDirectory(pathToPheme)
-parsePheme(pathToPheme)
+
+print(len(parsePheme(pathToPheme)))
