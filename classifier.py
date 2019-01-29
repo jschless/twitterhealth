@@ -63,7 +63,7 @@ def buildInputAndLabels(data, label='certainty'):
     """
 
     data = data.dropna(subset=[label])
-    X = data[['favorite_count', 'retweet_count']]
+    X = buildInput(data)
     y = data[label].apply(lambda x: classificationMap[x])
     return X, y
 
@@ -97,4 +97,4 @@ def listToDF(inList):
 def main(testTweets=None):
     threadList, tweetList = phemeParser.parsePheme(pathToPheme)
     run(tweetList, testTweets)
-#main()
+main()
