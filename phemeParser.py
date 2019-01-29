@@ -47,16 +47,10 @@ def processCategory(path, annotations):
     path -- path to the topics
     annotations -- dataframe of all annotations
     """
-    threads = []
-    allTweets = []
-    for thread, tweets in [processTweetFolder(path + '\\' + tweetFolder, tweetFolder, annotations) for tweetFolder in os.listdir(path)]:
-        threads.append(thread)
-        allTweets += tweets
-    return threads, allTweets
+    return [thread for thread in [processTweetFolder(path + '\\' + tweetFolder, tweetFolder, annotations) for tweetFolder in os.listdir(path)]]
 
 def processTweetFolder(path, tweetid, annotations):
     """Processes an entire thread and returns a tweet with all replies
-
 
     Keyword arguments:
     path -- path to threads
@@ -65,30 +59,13 @@ def processTweetFolder(path, tweetid, annotations):
     """
     thread = processTweetJSON(path+'\\source-tweets\\' + tweetid + '.json', False, annotations)
     with open(path +  '\\annotation.json') as f:
-        thread.threadAnnotation = json.load(f)
-    allTweets = [thread]
-    replyList = [processTweetJSON(path + '\\reactions\\' + tweetJSON, True, annotations) for tweetJSON in os.listdir(path + '\\reactions')]
-    replyChain = processReplies(path, tweetid, annotations, thread)
-    allTweets += replyList
-    thread.replyList = replyList
-    return thread, allTweets
-
-def processReplies(path, tweetid, annotations, root):
-    """Creates a tree structure out of replies
-
-    Keyword arguments:
-    path -- path to JSON
-    is_reply -- boolean denoting whether tweet is a reply
-    annotations -- dataframe of all annotations
-    """
-    structure = None
-    with open(path + '\\structure.json') as f:
-        structure = json.load(f)
+        thread.thread_annotation = json.load(f)
+    with open(path +  '\\structure.json') as f:
+        thread.thread_structure = json.load(f)
     root = Node(str(tweetid), tweet=root)
-    processTree(structure[tweetid], root, path + '\\reactions\\', annotations)
-    #for pre, _, node in RenderTree(root):
-    #    print('-'*len(pre) + node.name)
-    return root
+    processTree(thread.thread_structure[tweetid], root, path + '\\reactions\\', annotations)
+    thread.reply_chain = root
+    return thread
 
 def processTree(children, parent, path, annotations):
     """Returns tree of replies
