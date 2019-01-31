@@ -2,6 +2,7 @@ class Tweet:
     def __init__(self):
         self.reply_list = None
         self.annotation = None
+        self.thread_annotation = None
 
     def phemeTweet(self, text, favCount, retCount, id, isReply, user):
         self.tweet_text=text
@@ -48,7 +49,8 @@ class Tweet:
             'tweetid' : self.tweetid,
             'reply' : self.is_reply,
             'annotation' : self.annotation,
-            'replyList' : self.reply_list
+            'replyList' : self.reply_list,
+            'thread_id' : self.thread_id
         }
 
 class User:

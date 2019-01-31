@@ -3,9 +3,10 @@ import phemeParser
 from sklearn.neural_network import MLPClassifier
 from sklearn.model_selection import KFold
 from pandas_ml import ConfusionMatrix
+from features import *
 import matplotlib.pyplot as plt
 pathToPheme = 'C:\\Users\\EECS\\Documents'
-classificationMap = {'certain': 2, 'somewhat-certain':1, 'uncertain':0, 'underspecified': -1}
+certaintyMap = {'certain': 2, 'somewhat-certain':1, 'uncertain':0, 'underspecified': -1}
 
 def crossValidation(X, y):
     print('todo')
@@ -42,40 +43,31 @@ def kfold(mod, X, y, n_splits=5):
     plt.show()
     return bestMod
 
-def initializeDataset(data):
-    """Takes raw list of threads and creates pandas dataframe. Important because it removes unannotated data
+
+def buildInputAndLabels(data, label='misinformation'):
+    """Outputs input matrix and label matrix
 
     Keyword arguments:
     data -- list of threads
     """
-
-    inputs = pd.DataFrame.from_records([thread.to_dict() for thread in data if len(thread.annotation) > 0]).set_index('tweetid')
-    labels = pd.DataFrame.from_dict([thread.annotation[0] for thread in data if len(thread.annotation) > 0], orient = 'columns').set_index('tweetid')
-    test = [thread.thread_annotation for thread in data if len(thread.annotation) > 0]
-    print(test[0])
-    combined = pd.concat([inputs, labels], axis=1, sort=False) #combines the inputs with their labels
-    return combined
-
-def buildInputAndLabels(data, label='certainty'):
-    """Outputs input matrix and label matrix
-
-    Keyword arguments:
-    data -- pandas dataframe
-    """
-
-    data = data.dropna(subset=[label])
     X = buildInput(data)
-    y = data[label].apply(lambda x: classificationMap[x])
+    labels = pd.DataFrame.from_dict([thread.thread_annotation for thread in data if len(thread.thread_annotation) > 0], orient = 'columns').set_index('tweetid')
+    #combined = pd.concat([inputs, labels], axis=1, sort=False) #combines the inputs with their labels
+    y = labels[label].apply(lambda x: int(x)) #.apply(lambda x: classificationMap[x])
     return X, y
 
 def buildInput(data):
     """Outputs input vectors for unlabeled datasets
 
     Keyword arguments:
-    data -- pandas dataframe
+    data -- input list of threads
     """
 
-    return data[['favorite_count', 'retweet_count']]
+    """This is where the features from features.py are integrated"""
+    inputs = pd.DataFrame()
+    inputs['follow_ratio'] = [follow_ratio(thread.user) for thread in data]
+    #inputs['sentiment'] = [sentiment(thread) for thread in data]
+    return inputs
 
 def run(listOfThreads, testTweets):
     """Trains model and makes predictions for unlabeled set of tweets
@@ -84,8 +76,7 @@ def run(listOfThreads, testTweets):
     listOfThreads: input from PHEME to train datasets
     testTweets: list of Tweets to predict on
     """
-    data = initializeDataset(listOfThreads)
-    X, y = buildInputAndLabels(data)
+    X, y = buildInputAndLabels(listOfThreads)
     clf = MLPClassifier(solver='lbfgs')
     model = kfold(clf, X, y, 5)
     if testTweets is not None:

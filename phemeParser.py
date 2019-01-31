@@ -57,11 +57,13 @@ def processTweetFolder(path, tweetid):
     thread = processTweetJSON(path+'\\source-tweets\\' + tweetid + '.json', False)
     with open(path +  '\\annotation.json') as f:
         thread.thread_annotation = json.load(f)
+        thread.thread_annotation['tweetid'] = tweetid
     with open(path +  '\\structure.json') as f:
         thread.thread_structure = json.load(f)
     root = Node(str(tweetid), tweet=thread)
     processTree(thread.thread_structure[tweetid], root, path + '\\reactions\\')
     thread.reply_chain = root
+    thread.thread_id = tweetid
     return thread
 
 def processTree(children, parent, path):
@@ -104,4 +106,4 @@ def parsePheme(pathToPheme):
     annotations = loadAnnotations(pathToPheme)
     return crawlDirectory(pathToPheme)
 
-print(len(parsePheme(pathToPheme)))
+#print(len(parsePheme(pathToPheme)))
