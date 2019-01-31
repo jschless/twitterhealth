@@ -59,7 +59,7 @@ class User:
         self.follower_count = follower_count
         self.description = description
         self.verified = verified
-        self.friends_count = friends_count
+        self.following_count = friends_count
 
     def dfUser(self, dataframe):
         self.userid= dataframe['userid']

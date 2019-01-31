@@ -51,7 +51,8 @@ def initializeDataset(data):
 
     inputs = pd.DataFrame.from_records([thread.to_dict() for thread in data if len(thread.annotation) > 0]).set_index('tweetid')
     labels = pd.DataFrame.from_dict([thread.annotation[0] for thread in data if len(thread.annotation) > 0], orient = 'columns').set_index('tweetid')
-
+    test = [thread.thread_annotation for thread in data if len(thread.annotation) > 0]
+    print(test[0])
     combined = pd.concat([inputs, labels], axis=1, sort=False) #combines the inputs with their labels
     return combined
 
@@ -95,6 +96,6 @@ def listToDF(inList):
     return buildInput(pd.DataFrame.from_records([tweet.to_dict() for tweet in inList]))
 
 def main(testTweets=None):
-    threadList, tweetList = phemeParser.parsePheme(pathToPheme)
-    run(tweetList, testTweets)
+    threadList = phemeParser.parsePheme(pathToPheme)
+    run(threadList, testTweets)
 main()
