@@ -32,7 +32,6 @@ def kfold(mod, X, y, n_splits=5):
             bestMod = newMod
             predictionY = bestMod.predict(X.iloc[test_index])
             confusionMat = ConfusionMatrix(y.iloc[test_index].values, predictionY)
-            #confusionMat.print_stats()
         if worst == None or score < best:
             worst = score
         totalScore += score
@@ -40,6 +39,7 @@ def kfold(mod, X, y, n_splits=5):
     print('average score for %s tests is %s' % (n_splits, totalScore/n_splits))
     print('best score was %s\n worst score was %s' % (best, worst))
     confusionMat.plot()
+    confusionMat.print_stats()
     plt.show()
     return bestMod
 
@@ -51,9 +51,7 @@ def buildInputAndLabels(data, label='misinformation'):
     data -- list of threads
     """
     X = buildInput(data)
-    labels = pd.DataFrame.from_dict([thread.thread_annotation for thread in data if len(thread.thread_annotation) > 0], orient = 'columns').set_index('tweetid')
-    #combined = pd.concat([inputs, labels], axis=1, sort=False) #combines the inputs with their labels
-    y = labels[label].apply(lambda x: int(x)) #.apply(lambda x: classificationMap[x])
+    y = data['thread_annotation'].apply(convert_annotations)
     return X, y
 
 def buildInput(data):
@@ -65,8 +63,7 @@ def buildInput(data):
 
     """This is where the features from features.py are integrated"""
     inputs = pd.DataFrame()
-    inputs['follow_ratio'] = [follow_ratio(thread.user) for thread in data]
-    #inputs['sentiment'] = [sentiment(thread) for thread in data]
+    inputs['follow_ratio'] = data['user'].apply(follow_ratio)
     return inputs
 
 def run(listOfThreads, testTweets):
@@ -80,13 +77,10 @@ def run(listOfThreads, testTweets):
     clf = MLPClassifier(solver='lbfgs')
     model = kfold(clf, X, y, 5)
     if testTweets is not None:
-        model.predict(listToDF(testTweets))
-
-def listToDF(inList):
-    """Turns a list of tweets to a pandas dataframe"""
-    return buildInput(pd.DataFrame.from_records([tweet.to_dict() for tweet in inList]))
+        testX = buildInput(testTweets)
+        model.predict(textX)
 
 def main(testTweets=None):
-    threadList = phemeParser.parsePheme(pathToPheme)
-    run(threadList, testTweets)
+    threads = pd.DataFrame.from_dict([thread.to_dict() for thread in phemeParser.parsePheme(pathToPheme)])
+    run(threads, testTweets)
 main()

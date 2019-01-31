@@ -49,6 +49,7 @@ class Tweet:
             'tweetid' : self.tweetid,
             'reply' : self.is_reply,
             'annotation' : self.annotation,
+            'thread_annotation':  self.thread_annotation,
             'replyList' : self.reply_list,
             'thread_id' : self.thread_id
         }
