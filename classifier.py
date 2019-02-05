@@ -74,6 +74,10 @@ def run(listOfThreads, testTweets):
     testTweets: list of Tweets to predict on
     """
     X, y = buildInputAndLabels(listOfThreads)
+    print('X: ')
+    print(X.head())
+    print('y: ')
+    print(y.head())
     clf = MLPClassifier(solver='lbfgs')
     model = kfold(clf, X, y, 5)
     if testTweets is not None:

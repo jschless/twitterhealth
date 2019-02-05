@@ -4,7 +4,7 @@ import pandas as pd
 from pandas.io.json import json_normalize
 from itertools import chain
 from tweet import *
-from anytree import Node, RenderTree
+from anytree import Node, RenderTree, DoubleStyle, AsciiStyle
 
 ### USER VARIABLES ###
 #Link to PHEME dataset: https://figshare.com/articles/PHEME_rumour_scheme_dataset_journalism_use_case/2068650 #
@@ -63,6 +63,7 @@ def processTweetFolder(path, tweetid):
     root = Node(str(tweetid), tweet=thread)
     processTree(thread.thread_structure[tweetid], root, path + '\\reactions\\')
     thread.reply_chain = root
+    #print(RenderTree(root, style=AsciiStyle))
     thread.thread_id = tweetid
     return thread
 
@@ -76,7 +77,7 @@ def processTree(children, parent, path):
     if not children:
         return
     for key, value in children.items():
-        temp = Node(key, parent=parent, tweet=processTweetJSON(path + key + '.json', True))
+        temp = Node(str(key), parent=parent, tweet=processTweetJSON(path + key + '.json', True))
         processTree(value, temp, path)
 
 def processTweetJSON(path, is_reply):
@@ -105,5 +106,3 @@ def parsePheme(pathToPheme):
     """
     annotations = loadAnnotations(pathToPheme)
     return crawlDirectory(pathToPheme)
-
-#print(len(parsePheme(pathToPheme)))
