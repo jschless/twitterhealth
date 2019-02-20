@@ -12,7 +12,10 @@ We use the PHEME dataset in this project. The dataset can be found here: [PHEME]
 - tweet.py : This file defines the Tweet and User data structure along with some useful functions
 - phemeParser.py : This file processes the PHEME dataset into a list of annotated conversation threads
 - classifier.py : This file trains a classifier on the PHEME dataset according to features
+- features.py : This file contains all of the feature engineering
 - tester.py : This file supports classifying new datasets according to our classifier
+- credBankParser.py : This file supports parsing the credBank dataset to bolster our training data
+- electionInterferenceParser.py : This file supports parsing recent election interference data released by twitter. This provides a formidable test set for our classifier.
 
 ## Folders
 - Datasets: contains information on the datasets of this project as well as some small sets, like the Iranian fake news tweets
