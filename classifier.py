@@ -6,10 +6,13 @@ from pandas_ml import ConfusionMatrix
 from features import *
 import matplotlib.pyplot as plt
 pathToPheme = 'C:\\Users\\EECS\\Documents'
-certaintyMap = {'certain': 2, 'somewhat-certain':1, 'uncertain':0, 'underspecified': -1}
+certaintyMap = {'certain': 2, 'somewhat-certain': 1,
+                'uncertain': 0, 'underspecified': -1}
+
 
 def crossValidation(X, y):
     print('todo')
+
 
 def kfold(mod, X, y, n_splits=5):
     """Trains model using kfold cross validation
@@ -27,12 +30,13 @@ def kfold(mod, X, y, n_splits=5):
     for train_index, test_index in kf.split(X):
         newMod = mod.fit(X.iloc[train_index], y.iloc[train_index])
         score = mod.score(X.iloc[test_index], y.iloc[test_index])
-        if best == None or score > best:
+        if best is None or score > best:
             best = score
             bestMod = newMod
             predictionY = bestMod.predict(X.iloc[test_index])
-            confusionMat = ConfusionMatrix(y.iloc[test_index].values, predictionY)
-        if worst == None or score < best:
+            confusionMat =
+            ConfusionMatrix(y.iloc[test_index].values, predictionY)
+        if worst is None or score < worst:
             worst = score
         totalScore += score
 
@@ -54,6 +58,7 @@ def buildInputAndLabels(data, label='misinformation'):
     y = data['thread_annotation'].apply(convert_annotations)
     return X, y
 
+
 def buildInput(data):
     """Outputs input vectors for unlabeled datasets
 
@@ -65,6 +70,7 @@ def buildInput(data):
     inputs = pd.DataFrame()
     inputs['follow_ratio'] = data['user'].apply(follow_ratio)
     return inputs
+
 
 def run(listOfThreads, testTweets):
     """Trains model and makes predictions for unlabeled set of tweets
@@ -84,7 +90,10 @@ def run(listOfThreads, testTweets):
         testX = buildInput(testTweets)
         model.predict(textX)
 
+
 def main(testTweets=None):
-    threads = pd.DataFrame.from_dict([thread.to_dict() for thread in phemeParser.parsePheme(pathToPheme)])
+    threads = pd.DataFrame.from_dict(
+        [thread.to_dict() for thread in phemeParser.parsePheme(pathToPheme)]
+    )
     run(threads, testTweets)
 main()
