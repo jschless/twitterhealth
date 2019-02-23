@@ -20,23 +20,23 @@ def sentiment(tweet):
     return pos
 
 
-def convert_annotations(annotation, string=True):
+def convert_annotations(annotation, isString=True):
     if 'misinformation' in annotation.keys() and 'true'in annotation.keys():
         if int(annotation['misinformation']) == 0
         and int(annotation['true']) == 0:
-            if string:
+            if isString:
                 label = "unverified"
             else:
                 label = 2
         elif int(annotation['misinformation']) == 0
         and int(annotation['true']) == 1:
-            if string:
+            if isString:
                 label = "true"
             else:
                 label = 1
         elif int(annotation['misinformation']) == 1
         and int(annotation['true']) == 0:
-            if string:
+            if isString:
                 label = "false"
             else:
                 label = 0
@@ -51,12 +51,12 @@ def convert_annotations(annotation, string=True):
     and 'true' not in annotation.keys():
         # all instances have misinfo label but don't have true label
         if int(annotation['misinformation']) == 0:
-            if string:
+            if isString:
                 label = "unverified"
             else:
                 label = 2
         elif int(annotation['misinformation']) == 1:
-            if string:
+            if isString:
                 label = "false"
             else:
                 label = 0
