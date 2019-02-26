@@ -95,6 +95,11 @@ def main(testTweets=None):
         [thread.to_dict() for thread in phemeParser.parsePheme(pathToPheme)]
     )
     return run(threads, testTweets)
+
+def predict(tweet, classifier):
+    df = pd.DataFrame.from_dict([tweet.to_dict()])
+    input = buildInput(df)
+    return classifier.predict(input)
 #main()
 
 # start_time = time.time()

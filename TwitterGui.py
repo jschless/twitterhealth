@@ -2,6 +2,7 @@ import tweepy
 import tkinter
 from tweet import *
 import classifier
+import pandas as pd
 from pprint import pprint
 consumer_key = 'L6JvqYzvUeHX36sYTR8O3E7gD'
 consumer_secret = 'VKVPjkonSRUBzOsaiNKdcFToDISJ0ga3vGGvNuDo6nAfRtABU1'
@@ -51,8 +52,13 @@ class TwitWindow :
                 self.labels[i].config(text=labeltext)
 
                 # Display the text of the tweet
-                pprint(vars(statuses[i]))
+                tweetJSON = vars(statuses[i])['_json']
+                #pprint(tweetJSON)
+                tweet = Tweet()
+                tweet.phemeTweet(tweetJSON)
+                prediction = classifier.predict(tweet, self.classifier)
                 print(statuses[i].text)
+                print(prediction)
                 self.texts[i].insert(tkinter.END, statuses[i].text)
 
 

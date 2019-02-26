@@ -15,7 +15,10 @@ class Tweet(object):
                 self.user = user
 
     def to_dict(self):
-        return vars(self)
+        dict = {}
+        for key, value in vars(self).items():
+            dict[key] = value
+        return dict
 
     def dfTweet(self, dataframe):
         self.tweetid = dataframe['tweetid']
