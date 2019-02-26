@@ -34,17 +34,16 @@ def kfold(mod, X, y, n_splits=5):
             best = score
             bestMod = newMod
             predictionY = bestMod.predict(X.iloc[test_index])
-            confusionMat =
-            ConfusionMatrix(y.iloc[test_index].values, predictionY)
+            confusionMat = ConfusionMatrix(y.iloc[test_index].values, predictionY)
         if worst is None or score < worst:
             worst = score
         totalScore += score
 
     print('average score for %s tests is %s' % (n_splits, totalScore/n_splits))
     print('best score was %s\n worst score was %s' % (best, worst))
-    confusionMat.plot()
-    confusionMat.print_stats()
-    plt.show()
+    #confusionMat.plot()
+    #confusionMat.print_stats()
+    #plt.show()
     return bestMod
 
 
@@ -89,11 +88,12 @@ def run(listOfThreads, testTweets):
     if testTweets is not None:
         testX = buildInput(testTweets)
         model.predict(textX)
+    return model
 
 
 def main(testTweets=None):
     threads = pd.DataFrame.from_dict(
         [thread.to_dict() for thread in phemeParser.parsePheme(pathToPheme)]
     )
-    run(threads, testTweets)
-main()
+    return run(threads, testTweets)
+#main()

@@ -12,8 +12,7 @@ from anytree import Node, RenderTree, DoubleStyle, AsciiStyle
 
 # Replace with location of PHEME dataset. C:\...Documents\PHEME
 pathToPheme = 'C:\\Users\\EECS\\Documents'
-annotationFile = pathToPheme + '\\PHEME\\pheme-rumour-scheme-dataset
-\\annotations\\en-scheme-annotations.json'
+annotationFile = pathToPheme + '\\PHEME\\pheme-rumour-scheme-dataset\\annotations\\en-scheme-annotations.json'
 
 with open(annotationFile) as f:
     annotations = pd.DataFrame(
@@ -28,8 +27,7 @@ def loadAnnotations(path):
     path -- path to the location of the PHEME dataset
     """
 
-    annotationFile = path + '\\PHEME\\pheme-rumour-scheme-dataset
-    \\annotations\\en-scheme-annotations.json'
+    annotationFile = path + '\\PHEME\\pheme-rumour-scheme-dataset\\annotations\\en-scheme-annotations.json'
     with open(annotationFile) as f:
         return pd.DataFrame(
             [json.loads(line) for line in f if '#' not in line]
@@ -46,8 +44,7 @@ def crawlDirectory(path):
     # TODO: replace with flatten
     allThreads = []
 
-    for threads in
-    [processCategory(path + '\\' + dirName) for dirName in os.listdir(path)]:
+    for threads in [processCategory(path + '\\' + dirName) for dirName in os.listdir(path)]:
         allThreads += threads
     return allThreads
 

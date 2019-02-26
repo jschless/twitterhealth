@@ -1,12 +1,13 @@
 import tweepy
 import tkinter
+from tweet import *
+import classifier
 consumer_key = 'L6JvqYzvUeHX36sYTR8O3E7gD'
 consumer_secret = 'VKVPjkonSRUBzOsaiNKdcFToDISJ0ga3vGGvNuDo6nAfRtABU1'
 access_token = '1052184206368002049-9RSvx4QK9Js4gnMrMY8GCMvQYYPtPJ'
 access_token_secret = 'KUykgZdc8vIzDph3CasS91i7foWks8Y6NtLTpBxPTl3BR'
 
 class TwitWindow :
-
     def __init__(self) :
         auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
         auth.set_access_token(access_token, access_token_secret)
@@ -16,6 +17,8 @@ class TwitWindow :
         # Lists to hold the labels and text areas
         self.labels = []
         self.texts = []
+        self.classifier = classifier.main()
+        print(self.classifier)
 
     def CreateWindow(self):
         # Create the main window
