@@ -17,10 +17,9 @@ class TwitWindow :
         self.public_tweets = self.api.home_timeline()
         self.num_entries = len(self.public_tweets)
         # Lists to hold the labels and text areas
-        self.labels = []
         self.texts = []
-        self.classifier = classifier.main()
-        print(self.classifier)
+        self.labels = []
+        self.classifier = classifier.Classifier()
 
     def CreateWindow(self):
         # Create the main window
@@ -56,7 +55,7 @@ class TwitWindow :
                 #pprint(tweetJSON)
                 tweet = Tweet()
                 tweet.phemeTweet(tweetJSON)
-                prediction = classifier.predict(tweet, self.classifier)
+                prediction = self.classifier.predict(tweet)
                 print(statuses[i].text)
                 print(prediction)
                 self.texts[i].insert(tkinter.END, statuses[i].text)
