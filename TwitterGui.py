@@ -2,6 +2,7 @@ import tweepy
 import tkinter
 from tweet import *
 import classifier
+from pprint import pprint
 consumer_key = 'L6JvqYzvUeHX36sYTR8O3E7gD'
 consumer_secret = 'VKVPjkonSRUBzOsaiNKdcFToDISJ0ga3vGGvNuDo6nAfRtABU1'
 access_token = '1052184206368002049-9RSvx4QK9Js4gnMrMY8GCMvQYYPtPJ'
@@ -50,6 +51,8 @@ class TwitWindow :
                 self.labels[i].config(text=labeltext)
 
                 # Display the text of the tweet
+                pprint(vars(statuses[i]))
+                print(statuses[i].text)
                 self.texts[i].insert(tkinter.END, statuses[i].text)
 
 
