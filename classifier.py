@@ -1,5 +1,6 @@
 import pandas as pd
 import phemeParser
+import time
 from sklearn.neural_network import MLPClassifier
 from sklearn.model_selection import KFold
 from pandas_ml import ConfusionMatrix
@@ -64,6 +65,7 @@ def buildInput(data):
     """This is where the features from features.py are integrated"""
     inputs = pd.DataFrame()
     inputs['follow_ratio'] = data['user'].apply(follow_ratio)
+    #inputs['sentiment'] = data['text'].apply(sentiment)
     return inputs
 
 def run(listOfThreads, testTweets):
@@ -73,18 +75,28 @@ def run(listOfThreads, testTweets):
     listOfThreads: input from PHEME to train datasets
     testTweets: list of Tweets to predict on
     """
+    start_time = time.time()
     X, y = buildInputAndLabels(listOfThreads)
-    print('X: ')
-    print(X.head())
-    print('y: ')
-    print(y.head())
     clf = MLPClassifier(solver='lbfgs')
     model = kfold(clf, X, y, 5)
+    print("--- training model %s seconds ---" % (time.time() - start_time))
     if testTweets is not None:
         testX = buildInput(testTweets)
         model.predict(textX)
+    return model
 
 def main(testTweets=None):
-    threads = pd.DataFrame.from_dict([thread.to_dict() for thread in phemeParser.parsePheme(pathToPheme)])
-    run(threads, testTweets)
-main()
+    start_time = time.time()
+    threadList = [vars(thread) for thread in phemeParser.parsePheme(pathToPheme)]
+    print("--- loading dataset %s seconds ---" % (time.time() - start_time))
+    from pprint import pprint
+#    pprint(vars(threadList[0]))
+    threads = pd.DataFrame(threadList)
+    #print(threads.head())
+#    threads = pd.DataFrame.from_dict([thread.to_dict() for thread in phemeParser.parsePheme(pathToPheme)])
+    classifier = run(threads, testTweets)
+
+
+# start_time = time.time()
+# main()
+# print("--- %s seconds ---" % (time.time() - start_time))

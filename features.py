@@ -1,14 +1,15 @@
 from tweet import *
 
 def follow_ratio(user):
-    return (user.follower_count/user.following_count)
+    #from pprint import pprint
+    #pprint(vars(user))
+    return (user.followers_count/user.friends_count)
 
 def sentiment(tweet):
     import requests
     url = 'http://text-processing.com/api/sentiment'
-    input = tweet.tweet_text
+    input = tweet
     payload = {'text' : input}
-    print(payload)
     r = requests.post(url,data=payload)
     print(r)
     output = r.json()
@@ -16,7 +17,7 @@ def sentiment(tweet):
     neg = output['probability']['neg']
     neutral = output['probability']['neutral']
     return pos
-    
+
 def convert_annotations(annotation, string = True):
     if 'misinformation' in annotation.keys() and 'true'in annotation.keys():
         if int(annotation['misinformation'])==0 and int(annotation['true'])==0:
