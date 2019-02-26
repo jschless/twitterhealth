@@ -6,6 +6,7 @@ from itertools import chain
 from tweet import *
 from anytree import Node, RenderTree, DoubleStyle, AsciiStyle
 from pprint import pprint
+import itertools
 
 # Link to PHEME dataset:
 # https://figshare.com/articles/PHEME_rumour_scheme_dataset_journalism_use_case/2068650
@@ -43,12 +44,11 @@ def crawlDirectory(path):
     """
     path += '\\PHEME\\pheme-rumour-scheme-dataset\\threads\\en'
     # TODO: replace with flatten
-    allThreads = []
-
-    for threads in [processCategory(path + '\\' + dirName) for dirName in os.listdir(path)]:
-        allThreads += threads
-    return allThreads
-
+    return list(itertools.chain.from_iterable(
+        [t for t in [processCategory(path + '\\' + dirName)
+            for dirName in os.listdir(path)]
+        ])
+    )
 
 def processCategory(path):
     """Processes a PHEME tweet topic
