@@ -46,9 +46,7 @@ def crawlDirectory(path):
     # TODO: replace with flatten
     return list(itertools.chain.from_iterable(
         [t for t in [processCategory(path + '\\' + dirName)
-            for dirName in os.listdir(path)]
-        ])
-    )
+            for dirName in os.listdir(path)]]))
 
 def processCategory(path):
     """Processes a PHEME tweet topic
