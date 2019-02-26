@@ -20,6 +20,7 @@ with open(annotationFile) as f:
     )
 
 
+tweetCount = 0
 def loadAnnotations(path):
     """Returns annotation dataframe for all tweets in PHEME dataset
 
@@ -91,8 +92,14 @@ def processTree(children, parent, path):
     if not children:
         return
     for key, value in children.items():
+<<<<<<< HEAD
         temp = Node(str(key), parent=parent,
                     tweet=processTweetJSON(path + key + '.json', True))
+=======
+        temp = Node(str(key), parent=parent, tweet=processTweetJSON(path + key + '.json', True))
+        global tweetCount
+        tweetCount += 1
+>>>>>>> refactor
         processTree(value, temp, path)
 
 
@@ -103,12 +110,12 @@ def processTweetJSON(path, is_reply):
     path -- path to JSON
     is_reply -- boolean denoting whether tweet is a reply
     """
+    from collections import namedtuple
 
     with open(path) as f:
         data = json.load(f)
-        userData = data['user']
-        user = User()
         tweet = Tweet()
+<<<<<<< HEAD
         user.phemeUser(userData['name'], userData['screen_name'],
                        userData['favourites_count'],
                        userData['followers_count'],
@@ -120,6 +127,10 @@ def processTweetJSON(path, is_reply):
             annotations['tweetid'] == tweet.tweetid
         ].to_dict('r')
         # keeps dataframe id out of the mix
+=======
+        tweet.phemeTweet(data)
+        tweet.annotation = annotations[annotations['tweetid'] == tweet.id].to_dict('r') #keeps dataframe id out of the mix
+>>>>>>> refactor
         return tweet
 
 
@@ -131,3 +142,5 @@ def parsePheme(pathToPheme):
     """
     annotations = loadAnnotations(pathToPheme)
     return crawlDirectory(pathToPheme)
+
+parsePheme(pathToPheme)
