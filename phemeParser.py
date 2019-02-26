@@ -5,7 +5,7 @@ from pandas.io.json import json_normalize
 from itertools import chain
 from tweet import *
 from anytree import Node, RenderTree, DoubleStyle, AsciiStyle
-
+from pprint import pprint
 
 # Link to PHEME dataset:
 # https://figshare.com/articles/PHEME_rumour_scheme_dataset_journalism_use_case/2068650
@@ -92,14 +92,8 @@ def processTree(children, parent, path):
     if not children:
         return
     for key, value in children.items():
-<<<<<<< HEAD
         temp = Node(str(key), parent=parent,
                     tweet=processTweetJSON(path + key + '.json', True))
-=======
-        temp = Node(str(key), parent=parent, tweet=processTweetJSON(path + key + '.json', True))
-        global tweetCount
-        tweetCount += 1
->>>>>>> refactor
         processTree(value, temp, path)
 
 
@@ -115,22 +109,11 @@ def processTweetJSON(path, is_reply):
     with open(path) as f:
         data = json.load(f)
         tweet = Tweet()
-<<<<<<< HEAD
-        user.phemeUser(userData['name'], userData['screen_name'],
-                       userData['favourites_count'],
-                       userData['followers_count'],
-                       userData['description'],
-                       userData['verified'], userData['friends_count'])
-        tweet.phemeTweet(data['text'], data['favorite_count'],
-                         data['retweet_count'], data['id_str'], is_reply, user)
+        tweet.phemeTweet(data)
         tweet.annotation = annotations[
-            annotations['tweetid'] == tweet.tweetid
+            annotations['tweetid'] == tweet.id
         ].to_dict('r')
         # keeps dataframe id out of the mix
-=======
-        tweet.phemeTweet(data)
-        tweet.annotation = annotations[annotations['tweetid'] == tweet.id].to_dict('r') #keeps dataframe id out of the mix
->>>>>>> refactor
         return tweet
 
 

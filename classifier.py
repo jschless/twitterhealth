@@ -89,8 +89,6 @@ def run(listOfThreads, testTweets):
         testX = buildInput(testTweets)
         model.predict(textX)
     return model
-<<<<<<< HEAD
-
 
 def main(testTweets=None):
     threads = pd.DataFrame.from_dict(
@@ -98,21 +96,7 @@ def main(testTweets=None):
     )
     return run(threads, testTweets)
 #main()
-=======
-
-def main(testTweets=None):
-    start_time = time.time()
-    threadList = [vars(thread) for thread in phemeParser.parsePheme(pathToPheme)]
-    print("--- loading dataset %s seconds ---" % (time.time() - start_time))
-    from pprint import pprint
-#    pprint(vars(threadList[0]))
-    threads = pd.DataFrame(threadList)
-    #print(threads.head())
-#    threads = pd.DataFrame.from_dict([thread.to_dict() for thread in phemeParser.parsePheme(pathToPheme)])
-    classifier = run(threads, testTweets)
-
 
 # start_time = time.time()
 # main()
 # print("--- %s seconds ---" % (time.time() - start_time))
->>>>>>> refactor

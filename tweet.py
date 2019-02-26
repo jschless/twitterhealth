@@ -14,6 +14,9 @@ class Tweet(object):
                 user.phemeUser(value)
                 self.user = user
 
+    def to_dict(self):
+        return vars(self)
+
     def dfTweet(self, dataframe):
         self.tweetid = dataframe['tweetid']
         self.userid = dataframe['userid']
