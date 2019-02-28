@@ -11,13 +11,10 @@ pathToPheme = 'C:\\Users\\EECS\\Documents'
 
 class Classifier:
     def __init__(self):
-        self.threads = pd.DataFrame.from_dict(
-            [t.to_dict() for t in phemeParser.parsePheme(pathToPheme)]
+        self.threads = pd.Series(
+            [t for t in phemeParser.parsePheme(pathToPheme)]
         )
         self.model = MLPClassifier(solver='lbfgs')
-
-    def crossValidation(self, X, y):
-        print('todo')
 
     def kfold(self, X, y, verbose=False, n_splits=5):
         """Trains model using kfold cross validation
@@ -65,7 +62,7 @@ class Classifier:
         data -- list of threads
         """
         X = self.buildInput(data)
-        y = data['thread_annotation'].apply(convert_annotations)
+        y = data.apply(convert_annotations)
         return X, y
 
     def buildInput(self, data):
@@ -77,8 +74,8 @@ class Classifier:
 
         # This is where the features from features.py are integrated
         inputs = pd.DataFrame()
-        inputs['follow_ratio'] = data['user'].apply(follow_ratio)
-        inputs['graph_follow_ratio'] = data['reply_chain'].apply(
+        inputs['follow_ratio'] = data.apply(follow_ratio)
+        inputs['graph_follow_ratio'] = data.apply(
             lambda x : graph_weight(x, follow_ratio)
         )
         # inputs['sentiment'] = data['text'].apply(sentiment)
@@ -99,6 +96,6 @@ class Classifier:
             self.model.predict(textX)
 
     def predict(self, tweet):
-        df = pd.DataFrame.from_dict([tweet.to_dict()])
+        df = pd.Series([tweet])
         input = self.buildInput(df)
         return self.model.predict(input)
