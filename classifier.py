@@ -78,7 +78,7 @@ class Classifier:
         inputs['graph_follow_ratio'] = data.apply(
             lambda x : graph_weight(x, follow_ratio)
         )
-        # inputs['sentiment'] = data['text'].apply(sentiment)
+        inputs['sentiment'] = data.apply(sentiment)
         return inputs
 
     def run(self, verb=False, testTweets=None):

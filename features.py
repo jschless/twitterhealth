@@ -9,18 +9,12 @@ def follow_ratio(tweet):
     return (user.followers_count/user.friends_count)
 
 def sentiment(tweet):
-    import requests
-    url = 'http://text-processing.com/api/sentiment'
-    input = tweet.tweet_text
-    payload = {'text': input}
-    print(payload)
-    r = requests.post(url, data=payload)
-    print(r)
-    output = r.json()
-    pos = output['probability']['pos']
-    neg = output['probability']['neg']
-    neutral = output['probability']['neutral']
-    return pos
+    text = tweet.text
+    from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
+    analyzer = SentimentIntensityAnalyzer()
+    scores = analyzer.polarity_scores(text)
+    sentiment = scores['pos']-scores['neg']
+    return sentiment
 
 def graph_weight(tweet, func):
     reply_chain = tweet.reply_chain
