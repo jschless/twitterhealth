@@ -1,11 +1,11 @@
 from tweet import *
-
+from anytree import Node, RenderTree, AsciiStyle, LevelOrderIter
 
 def follow_ratio(user):
-    #from pprint import pprint
-    #pprint(vars(user))
+    if user.friends_count == 0:
+        print(user)
+        return 0
     return (user.followers_count/user.friends_count)
-
 
 def sentiment(tweet):
     import requests
@@ -21,6 +21,15 @@ def sentiment(tweet):
     neutral = output['probability']['neutral']
     return pos
 
+def graph_weight(reply_chain, func):
+    if reply_chain is None:
+        return 0
+    credAgg = 0
+    weight = 1.0
+    for node in LevelOrderIter(reply_chain):
+        credAgg += weight*func(node.tweet.user)
+        weight *= .5
+    return credAgg
 
 def convert_annotations(annotation, isString=True):
     if 'misinformation' in annotation.keys() and 'true'in annotation.keys():

@@ -77,7 +77,11 @@ class Classifier:
 
         # This is where the features from features.py are integrated
         inputs = pd.DataFrame()
+        print(data.columns)
         inputs['follow_ratio'] = data['user'].apply(follow_ratio)
+        inputs['graph_follow_ratio'] = data['reply_chain'].apply(
+            lambda x : graph_weight(x, follow_ratio)
+        )
         # inputs['sentiment'] = data['text'].apply(sentiment)
         return inputs
 
@@ -99,3 +103,6 @@ class Classifier:
         df = pd.DataFrame.from_dict([tweet.to_dict()])
         input = self.buildInput(df)
         return self.model.predict(input)
+        
+clf = Classifier()
+clf.run()

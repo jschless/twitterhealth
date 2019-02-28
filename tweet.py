@@ -2,7 +2,7 @@ from collections import namedtuple
 import json
 class Tweet(object):
     def __init__(self):
-        self.reply_list = None
+        self.reply_chain = None
         self.annotation = None
         self.thread_annotation = None
 
