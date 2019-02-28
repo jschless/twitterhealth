@@ -69,6 +69,7 @@ def buildInput(data):
     """This is where the features from features.py are integrated"""
     inputs = pd.DataFrame()
     inputs['follow_ratio'] = data['user'].apply(follow_ratio)
+    inputs['sentiment'] = data['text'].apply(sentiment)
     return inputs
 
 
