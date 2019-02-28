@@ -98,4 +98,4 @@ class Classifier:
     def predict(self, tweet):
         df = pd.Series([tweet])
         input = self.buildInput(df)
-        return self.model.predict(input)
+        return self.model.predict(input), 1 #TODO return probability

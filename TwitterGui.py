@@ -4,10 +4,11 @@ from tweet import *
 import classifier
 import pandas as pd
 from pprint import pprint
-consumer_key = 'L6JvqYzvUeHX36sYTR8O3E7gD'
-consumer_secret = 'VKVPjkonSRUBzOsaiNKdcFToDISJ0ga3vGGvNuDo6nAfRtABU1'
-access_token = '1052184206368002049-9RSvx4QK9Js4gnMrMY8GCMvQYYPtPJ'
-access_token_secret = 'KUykgZdc8vIzDph3CasS91i7foWks8Y6NtLTpBxPTl3BR'
+import twitconfig as cfg
+consumer_key = cfg.twitter['consumer_key']
+consumer_secret = cfg.twitter['consumer_secret']
+access_token = cfg.twitter['access_token']
+access_token_secret = cfg.twitter['access_token_secret']
 
 class TwitWindow :
     def __init__(self) :
@@ -20,6 +21,7 @@ class TwitWindow :
         self.texts = []
         self.labels = []
         self.classifier = classifier.Classifier()
+        self.classifier.run()
 
     def CreateWindow(self):
         # Create the main window
