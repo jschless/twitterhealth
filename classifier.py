@@ -93,6 +93,13 @@ class Classifier:
 
 
     def predict(self, tweet):
+        probMap = {'false': 0, 'true': 1}
         df = pd.DataFrame.from_dict([tweet.to_dict()])
         input = self.buildInput(df)
-        return self.model.predict(input)
+        prediction = self.model.predict(input)
+        probMat = self.model.predict_proba(input)
+        print(probMat[0])
+        index = int(probMap.get(prediction, 2))
+        print(index)
+        prob = probMat[0, index]
+        return prediction, prob
