@@ -26,7 +26,16 @@ It is easy to get this code working and reproduce our results.
 
 2. Change the "pathToPheme" variable at the top of classifier.py/
 
-3. Install python packages as necessary.
+3. Create a config file called `twitconfig.py` with the access keys from your Twitter application. The contents of the code should be as follows but replacing the values in the dictionary with your individual account values.
+~~~~
+twitter = {'consumer_key': 'L6JvqYzvUeHX36sYTR8O3E7gD',
+            'consumer_secret': 'VKVPjkonSRUBzOsaiNKdcFToDISJ0ga3vGGvNuDo6nAfRtABU1',
+            'access_token': '1052184206368002049-9RSvx4QK9Js4gnMrMY8GCMvQYYPtPJ',
+            'access_token_secret': 'KUykgZdc8vIzDph3CasS91i7foWks8Y6NtLTpBxPTl3BR'
+}
+~~~~
+
+4. Install python packages as necessary.
 
 # Running the code
 All scripts are run through twitterhealth.py. At the command line, simply run 'twitterhealth.py'. You will be given instructions on how to run it:
