@@ -15,12 +15,11 @@ class Classifier:
             [t.to_dict() for t in phemeParser.parsePheme(pathToPheme)]
         )
         self.model = MLPClassifier(solver='lbfgs')
-        self.run()
 
     def crossValidation(self, X, y):
         print('todo')
 
-    def kfold(self, X, y, n_splits=5):
+    def kfold(self, X, y, verbose=False, n_splits=5):
         """Trains model using kfold cross validation
 
         Keyword arguments:
@@ -53,9 +52,10 @@ class Classifier:
             )
         )
         print('best score was %s\n worst score was %s' % (best, worst))
-        # confusionMat.plot()
-        # confusionMat.print_stats()
-        # plt.show()
+        if verbose:
+            confusionMat.plot()
+            confusionMat.print_stats()
+            plt.show()
         self.model = bestMod
 
     def buildInputAndLabels(self, data, label='misinformation'):
@@ -77,7 +77,6 @@ class Classifier:
 
         # This is where the features from features.py are integrated
         inputs = pd.DataFrame()
-        print(data.columns)
         inputs['follow_ratio'] = data['user'].apply(follow_ratio)
         inputs['graph_follow_ratio'] = data['reply_chain'].apply(
             lambda x : graph_weight(x, follow_ratio)
@@ -85,7 +84,7 @@ class Classifier:
         # inputs['sentiment'] = data['text'].apply(sentiment)
         return inputs
 
-    def run(self, testTweets=None):
+    def run(self, verb=False, testTweets=None):
         """Trains model and makes predictions for unlabeled set of tweets
 
         listOfThreads: input from PHEME to train datasets
@@ -93,7 +92,7 @@ class Classifier:
         """
         start_time = time.time()
         X, y = self.buildInputAndLabels(self.threads)
-        self.kfold(X, y, 5)
+        self.kfold(X, y, n_splits=5, verbose=verb)
         print("--- training model %s seconds ---" % (time.time() - start_time))
         if testTweets is not None:
             testX = self.buildInput(testTweets)
@@ -103,6 +102,3 @@ class Classifier:
         df = pd.DataFrame.from_dict([tweet.to_dict()])
         input = self.buildInput(df)
         return self.model.predict(input)
-        
-clf = Classifier()
-clf.run()
