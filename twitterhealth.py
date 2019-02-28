@@ -1,6 +1,6 @@
 import sys, getopt, classifier, TwitterGui
 def main(argv):
-    help = 'main.py [-c -t -v]\n'
+    help = 'twitterhealth.py [-c -t -v]\n'
     help += '-c or classifier : only runs classifier\n'
     help += '-t or twitter : runs classifier within twitter GUI\n'
     help += '-v or verbose : prints extra information'
