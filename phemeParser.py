@@ -7,20 +7,9 @@ from tweet import *
 from anytree import Node, RenderTree, DoubleStyle, AsciiStyle
 from pprint import pprint
 import itertools
-
-# Link to PHEME dataset:
-# https://figshare.com/articles/PHEME_rumour_scheme_dataset_journalism_use_case/2068650
-
-# Replace with location of PHEME dataset. C:\...Documents\PHEME
-pathToPheme = 'C:\\Users\\EECS\\Documents'
-# annotationFile = pathToPheme + '\\PHEME\\pheme-rumour-scheme-dataset\\annotations\\en-scheme-annotations.json'
+import twitconfig as cfg
+pathToPheme = cfg.pheme_path
 annotations = None
-'''
-with open(annotationFile) as f:
-    annotations = pd.DataFrame(
-        [json.loads(line) for line in f if '#' not in line]
-    )
-'''
 
 def loadAnnotations(path):
     """Returns annotation dataframe for all tweets in PHEME dataset
