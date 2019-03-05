@@ -15,6 +15,9 @@ class Tweet(object):
                 user = User()
                 user.phemeUser(value)
                 self.user = user
+            elif key == 'entities':
+                entities = Entities(value)
+                self.entities = entities
 
     def to_dict(self):
         dict = {}
@@ -33,3 +36,8 @@ class User:
 
     def __str__(self):
         return self.screen_name
+
+class Entities:
+    def __init__(self, dict):
+        for key, value in dict.items():
+            setattr(self, key, value)
