@@ -67,9 +67,9 @@ class Classifier:
         Keyword arguments:
         data -- list of threads
         """
-        X = self.buildInput(data)
-        y = data.apply(convert_annotations)
-        return X, y
+        input = self.buildInput(data)
+        labels = data.apply(convert_annotations)
+        return input, labels
 
     def buildInput(self, data):
         """Outputs input vectors for unlabeled datasets
@@ -94,9 +94,8 @@ class Classifier:
         testTweets: list of Tweets to predict on
         """
         start_time = time.time()
-        X, y = self.buildInputAndLabels(self.threads)
-        self.kfold(X, y, n_splits=5, verbose=verb)
-        print("--- training model %s seconds ---" % (time.time() - start_time))
+        input, labels = self.buildInputAndLabels(self.threads)
+        self.kfold(input, labels, n_splits=5, verbose=verb)
         if testTweets is not None:
             testX = self.buildInput(testTweets)
             self.model.predict(textX)
@@ -118,6 +117,8 @@ def plot_confusion_matrix(y_true, y_pred, classes,
     """
     This function prints and plots the confusion matrix.
     Normalization can be applied by setting `normalize=True`.
+    https://scikit-learn.org/stable/auto_examples/model_selection/
+    plot_confusion_matrix.html
     """
     if not title:
         if normalize:
