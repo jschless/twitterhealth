@@ -96,7 +96,6 @@ class Classifier:
             self.model.predict(textX)
 
     def predict(self, tweet):
-<<<<<<< HEAD
         probMap = {'false': 0, 'true': 1}
         df = pd.DataFrame.from_dict([tweet.to_dict()])
         input = self.buildInput(df)
@@ -107,8 +106,3 @@ class Classifier:
         print(index)
         prob = probMat[0, index]
         return prediction, prob
-=======
-        df = pd.Series([tweet])
-        input = self.buildInput(df)
-        return self.model.predict(input), 1  # TODO return probability
->>>>>>> devel

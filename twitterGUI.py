@@ -60,13 +60,7 @@ class TwitWindow:
                 tweet.phemeTweet(tweetJSON)
                 prediction, probability = self.classifier.predict(tweet)
                 print(statuses[i].text)
-<<<<<<< HEAD:TwitterGui.py
-                #print('Model predicts that this tweet is ' + prediction)#
-                print(prediction)
-                print(probability)# + ' with probability ' + str(probability))
-=======
                 # print('Model predicts that this tweet is ' + prediction)#
                 print(prediction)
                 print(probability)
->>>>>>> devel:twitterGUI.py
                 self.texts[i].insert(tkinter.END, statuses[i].text)
