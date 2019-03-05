@@ -18,7 +18,7 @@ We use the PHEME dataset in this project. The dataset can be found here: [PHEME]
 ## How to Run Our Code
 It is easy to get this code working and reproduce our results.
 
-# Setting up the Development Environment
+### Setting up the Development Environment
 1. You will need Python 3. Download the PHEME dataset found here: [PHEME](https://figshare.com/articles/PHEME_rumour_scheme_dataset_journalism_use_case/2068650).
 
 2. Create a config file called `twitconfig.py` with the access keys from your Twitter application. The contents of the code should be as follows but replacing the values in the dictionary with your individual account values. Add the path to the pheme dataset in this config file.
@@ -33,7 +33,7 @@ pheme_path = 'C:\\Users\\EECS\\Documents'
 
 3. Install python packages as necessary.
 
-# Running the code
+### Running the code
 All scripts are run through twitterhealth.py. At the command line, simply run 'twitterhealth.py'. You will be given instructions on how to run it:
 ~~~~
 twitterhealth.py [-c -t -v]
@@ -46,7 +46,7 @@ twitterhealth.py [-c -t -v]
 - -v prints more detailed information about the classifier's performance
 - -t opens our Twitter GUI and applies the classifier to each tweet
 
-# Adding Features
+### Adding Features
 One of the advantages of our code design is easy addition of features. Simply add the feature to features.py. (It must take a tweet object from tweet.py as an argument). Below is an example of a simple feature that computes following ratio:
 
 ~~~~
@@ -71,6 +71,10 @@ return inputs
 ~~~~~
 
 The formula for adding is simply `inputs['name_of_feature'] = data.apply(name_of_function) ` Here, it will be used in both the training of the model and the Twitter GUI.
+
+### Tweet and User Objects
+The Tweet and User objects we use correspond to those outlined by Twitter. Twitter has defined the different attributes for Tweet [here](https://developer.twitter.com/en/docs/tweets/data-dictionary/overview/tweet-object) and User [here](https://developer.twitter.com/en/docs/tweets/data-dictionary/overview/user-object).
+
 
 ## Contributors
 - Pat Cowley
