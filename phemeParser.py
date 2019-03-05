@@ -33,7 +33,6 @@ def crawlDirectory(path):
     path -- path to directory
     """
     path += '\\PHEME\\pheme-rumour-scheme-dataset\\threads\\en'
-    # TODO: replace with flatten
     return list(itertools.chain.from_iterable(
         [t for t in [processCategory(path + '\\' + dirName)
                      for dirName in os.listdir(path)]]))
