@@ -10,8 +10,9 @@ consumer_secret = cfg.twitter['consumer_secret']
 access_token = cfg.twitter['access_token']
 access_token_secret = cfg.twitter['access_token_secret']
 
-class TwitWindow :
-    def __init__(self) :
+
+class TwitWindow:
+    def __init__(self):
         auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
         auth.set_access_token(access_token, access_token_secret)
         self.api = tweepy.API(auth)
@@ -54,12 +55,12 @@ class TwitWindow :
 
                 # Display the text of the tweet
                 tweetJSON = vars(statuses[i])['_json']
-                #pprint(tweetJSON)
+                # pprint(tweetJSON)
                 tweet = Tweet()
                 tweet.phemeTweet(tweetJSON)
                 prediction, probability = self.classifier.predict(tweet)
                 print(statuses[i].text)
-                #print('Model predicts that this tweet is ' + prediction)#
+                # print('Model predicts that this tweet is ' + prediction)#
                 print(prediction)
-                print(probability)# + ' with probability ' + str(probability))
+                print(probability)
                 self.texts[i].insert(tkinter.END, statuses[i].text)
