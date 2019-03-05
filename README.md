@@ -72,10 +72,6 @@ return inputs
 
 The formula for adding is simply `inputs['name_of_feature'] = data.apply(name_of_function) ` Here, it will be used in both the training of the model and the Twitter GUI.
 
-## Folders
-- Datasets: contains information on the datasets of this project as well as some small sets, like the Iranian fake news tweets
-
-- Scratchwork: This folder contains some scratch work.
 ## Contributors
 - Pat Cowley
 - Grayson Osborne
