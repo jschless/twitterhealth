@@ -76,7 +76,7 @@ class Classifier:
         inputs = pd.DataFrame()
         inputs['follow_ratio'] = data.apply(follow_ratio)
         inputs['graph_follow_ratio'] = data.apply(
-            lambda x : graph_weight(x, follow_ratio)
+            lambda x: graph_weight(x, follow_ratio)
         )
         inputs['sentiment'] = data.apply(sentiment)
         return inputs
@@ -98,4 +98,4 @@ class Classifier:
     def predict(self, tweet):
         df = pd.Series([tweet])
         input = self.buildInput(df)
-        return self.model.predict(input), 1 #TODO return probability
+        return self.model.predict(input), 1  # TODO return probability
