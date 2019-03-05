@@ -6,30 +6,21 @@ from itertools import chain
 from tweet import *
 from anytree import Node, RenderTree, DoubleStyle, AsciiStyle
 from pprint import pprint
-
-# Link to PHEME dataset:
-# https://figshare.com/articles/PHEME_rumour_scheme_dataset_journalism_use_case/2068650
-
-# Replace with location of PHEME dataset. C:\...Documents\PHEME
-pathToPheme = 'C:\\Users\\EECS\\Documents'
-annotationFile = pathToPheme + '\\PHEME\\pheme-rumour-scheme-dataset\\annotations\\en-scheme-annotations.json'
-
-with open(annotationFile) as f:
-    annotations = pd.DataFrame(
-        [json.loads(line) for line in f if '#' not in line]
-    )
+import itertools
+import twitconfig as cfg
+pathToPheme = cfg.pheme_path
+annotations = None
 
 
-tweetCount = 0
 def loadAnnotations(path):
     """Returns annotation dataframe for all tweets in PHEME dataset
 
     Keyword arguments:
     path -- path to the location of the PHEME dataset
     """
-
-    annotationFile = path + '\\PHEME\\pheme-rumour-scheme-dataset\\annotations\\en-scheme-annotations.json'
-    with open(annotationFile) as f:
+    path += '\\PHEME\\pheme-rumour-scheme-dataset\\'
+    path += 'annotations\\en-scheme-annotations.json'
+    with open(path) as f:
         return pd.DataFrame(
             [json.loads(line) for line in f if '#' not in line]
         )
@@ -43,11 +34,9 @@ def crawlDirectory(path):
     """
     path += '\\PHEME\\pheme-rumour-scheme-dataset\\threads\\en'
     # TODO: replace with flatten
-    allThreads = []
-
-    for threads in [processCategory(path + '\\' + dirName) for dirName in os.listdir(path)]:
-        allThreads += threads
-    return allThreads
+    return list(itertools.chain.from_iterable(
+        [t for t in [processCategory(path + '\\' + dirName)
+                     for dirName in os.listdir(path)]]))
 
 
 def processCategory(path):
@@ -123,7 +112,6 @@ def parsePheme(pathToPheme):
     Keyword arguments:
     pathToPheme -- path to PHEME dataset
     """
+    global annotations
     annotations = loadAnnotations(pathToPheme)
     return crawlDirectory(pathToPheme)
-
-parsePheme(pathToPheme)
