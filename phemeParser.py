@@ -13,15 +13,15 @@ import itertools
 
 # Replace with location of PHEME dataset. C:\...Documents\PHEME
 pathToPheme = 'C:\\Users\\EECS\\Documents'
-annotationFile = pathToPheme + '\\PHEME\\pheme-rumour-scheme-dataset\\annotations\\en-scheme-annotations.json'
-
+# annotationFile = pathToPheme + '\\PHEME\\pheme-rumour-scheme-dataset\\annotations\\en-scheme-annotations.json'
+annotations = None
+'''
 with open(annotationFile) as f:
     annotations = pd.DataFrame(
         [json.loads(line) for line in f if '#' not in line]
     )
+'''
 
-
-tweetCount = 0
 def loadAnnotations(path):
     """Returns annotation dataframe for all tweets in PHEME dataset
 
@@ -121,7 +121,6 @@ def parsePheme(pathToPheme):
     Keyword arguments:
     pathToPheme -- path to PHEME dataset
     """
+    global annotations
     annotations = loadAnnotations(pathToPheme)
     return crawlDirectory(pathToPheme)
-
-parsePheme(pathToPheme)

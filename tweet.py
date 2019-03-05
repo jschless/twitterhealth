@@ -27,3 +27,6 @@ class User:
     def phemeUser(self, dict):
         for key, value in dict.items():
             setattr(self, key, value)
+
+    def __str__(self):
+        return self.screen_name

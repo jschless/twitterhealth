@@ -4,7 +4,7 @@ from anytree import Node, RenderTree, AsciiStyle, LevelOrderIter
 def follow_ratio(tweet):
     user = tweet.user
     if user.friends_count == 0:
-        print(user)
+        print('[warning] user ' + str(user) + ' has zero friends')
         return 0
     return (user.followers_count/user.friends_count)
 
