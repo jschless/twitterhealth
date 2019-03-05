@@ -26,18 +26,24 @@ class Classifier:
         """
 
         totalScore = 0
-        kf = KFold(n_splits=n_splits)
-        best, bestMod, worst, y_pred, y_true = None, None, None, None, None
+        kf = KFold(n_splits=n_splits, shuffle=True)
+        best, best_mod, y_pred_best, y_true_best = None, None, None, None
+        worst, worst_mod, y_pred_worst, y_true_worst = None, None, None, None
+
         for train_index, test_index in kf.split(X):
-            newMod = self.model.fit(X.iloc[train_index], y.iloc[train_index])
+            new_mod = self.model.fit(X.iloc[train_index], y.iloc[train_index])
             score = self.model.score(X.iloc[test_index], y.iloc[test_index])
             if best is None or score > best:
                 best = score
-                bestMod = newMod
-                y_pred = bestMod.predict(X.iloc[test_index])
-                y_true = y.iloc[test_index].values
+                best_mod = new_mod
+                y_pred_best = best_mod.predict(X.iloc[test_index])
+                y_true_best = y.iloc[test_index].values
             if worst is None or score < worst:
                 worst = score
+                worst_mod = new_mod
+                y_pred_worst = worst_mod.predict(X.iloc[test_index])
+                y_true_worst = y.iloc[test_index].values
+
             totalScore += score
 
         print(
@@ -48,9 +54,12 @@ class Classifier:
         print('best score was %s\nworst score was %s' % (best, worst))
         if verbose:
             class_names = np.array(['false', 'true', 'unverified'])
-            plot_confusion_matrix(y_true, y_pred, classes=class_names)
+            plot_confusion_matrix(y_true_best, y_pred_best, classes=class_names)
             plt.show()
-        self.model = bestMod
+            plot_confusion_matrix(y_true_worst, y_pred_worst, classes=class_names)
+            plt.show()
+
+        self.model = best_mod
 
     def buildInputAndLabels(self, data, label='misinformation'):
         """Outputs input matrix and label matrix
