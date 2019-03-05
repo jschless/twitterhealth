@@ -4,10 +4,8 @@ import phemeParser
 import time
 from sklearn.neural_network import MLPClassifier
 from sklearn.model_selection import KFold
-from pandas_ml import ConfusionMatrix
 from features import *
 from sklearn.metrics import confusion_matrix
-from sklearn.utils.multiclass import unique_labels
 import matplotlib.pyplot as plt
 
 class Classifier:
@@ -121,8 +119,6 @@ def plot_confusion_matrix(y_true, y_pred, classes,
     # Compute confusion matrix
     cm = confusion_matrix(y_true, y_pred)
     # Only use the labels that appear in the data
-    print(unique_labels(y_true, y_pred))
-    # classes = classes[unique_labels(y_true, y_pred)]
     if normalize:
         cm = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
         print("Normalized confusion matrix")
