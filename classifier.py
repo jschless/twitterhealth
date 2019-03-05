@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 import phemeParser
 import time
 from sklearn.neural_network import MLPClassifier
@@ -96,13 +97,11 @@ class Classifier:
             self.model.predict(textX)
 
     def predict(self, tweet):
-        probMap = {'false': 0, 'true': 1}
-        df = pd.DataFrame.from_dict([tweet.to_dict()])
+        probMap = {'false': 0, 'true': 1, 'unverified': 2}
+        df = pd.Series([tweet])
         input = self.buildInput(df)
         prediction = self.model.predict(input)
         probMat = self.model.predict_proba(input)
-        print(probMat[0])
-        index = int(probMap.get(prediction, 2))
-        print(index)
-        prob = probMat[0, index]
+        index = probMap[prediction[0]]
+        prob = probMat[0, index]/np.sum(probMat[0])
         return prediction, prob

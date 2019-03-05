@@ -33,7 +33,7 @@ def main(argv):
         elif opt in ('-v', '--verbose'):
             verbose = True
     if twitter:
-        win = TwitterGui.TwitWindow()
+        win = twitterGUI.TwitWindow()
         win.CreateWindow()
     elif clas:
         clf = classifier.Classifier()
