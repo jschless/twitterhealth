@@ -1,6 +1,6 @@
-import sys, getopt, classifier, TwitterGui
+import sys, getopt, classifier, twitterGUI
 def main(argv):
-    help = 'twitterhealth.py [-c -t -v]\n'
+    help = 'main.py [-c -t -v]\n'
     help += '-c or classifier : only runs classifier\n'
     help += '-t or twitter : runs classifier within twitter GUI\n'
     help += '-v or verbose : prints extra information'
