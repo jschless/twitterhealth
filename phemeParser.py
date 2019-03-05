@@ -11,15 +11,16 @@ import twitconfig as cfg
 pathToPheme = cfg.pheme_path
 annotations = None
 
+
 def loadAnnotations(path):
     """Returns annotation dataframe for all tweets in PHEME dataset
 
     Keyword arguments:
     path -- path to the location of the PHEME dataset
     """
-
-    annotationFile = path + '\\PHEME\\pheme-rumour-scheme-dataset\\annotations\\en-scheme-annotations.json'
-    with open(annotationFile) as f:
+    path += '\\PHEME\\pheme-rumour-scheme-dataset\\'
+    path += 'annotations\\en-scheme-annotations.json'
+    with open(path) as f:
         return pd.DataFrame(
             [json.loads(line) for line in f if '#' not in line]
         )
@@ -35,7 +36,8 @@ def crawlDirectory(path):
     # TODO: replace with flatten
     return list(itertools.chain.from_iterable(
         [t for t in [processCategory(path + '\\' + dirName)
-            for dirName in os.listdir(path)]]))
+                     for dirName in os.listdir(path)]]))
+
 
 def processCategory(path):
     """Processes a PHEME tweet topic
