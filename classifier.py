@@ -95,7 +95,7 @@ class Classifier:
         """
         start_time = time.time()
         input, labels = self.buildInputAndLabels(self.threads)
-        self.kfold(input, labels, n_splits=5, verbose=verb)
+        self.kfold(input, labels, n_splits=2, verbose=verb)
         if testTweets is not None:
             testX = self.buildInput(testTweets)
             self.model.predict(textX)
