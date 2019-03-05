@@ -1,5 +1,7 @@
 from collections import namedtuple
 import json
+
+
 class Tweet(object):
     def __init__(self):
         self.reply_chain = None
@@ -22,6 +24,7 @@ class Tweet(object):
 
     def __str__(self):
         return self.text + ' - ' + self.user.screen_name
+
 
 class User:
     def phemeUser(self, dict):
