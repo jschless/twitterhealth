@@ -7,13 +7,11 @@ from sklearn.model_selection import KFold
 from pandas_ml import ConfusionMatrix
 from features import *
 import matplotlib.pyplot as plt
-pathToPheme = 'C:\\Users\\EECS\\Documents'
-
 
 class Classifier:
     def __init__(self):
         self.threads = pd.Series(
-            [t for t in phemeParser.parsePheme(pathToPheme)]
+            [t for t in phemeParser.parsePheme()]
         )
         self.model = MLPClassifier(solver='lbfgs')
 

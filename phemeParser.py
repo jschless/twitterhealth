@@ -106,11 +106,9 @@ def processTweetJSON(path, is_reply):
         return tweet
 
 
-def parsePheme(pathToPheme):
+def parsePheme():
     """Parses PHEME dataset and returns a list of all conversation threads
 
-    Keyword arguments:
-    pathToPheme -- path to PHEME dataset
     """
     global annotations
     annotations = loadAnnotations(pathToPheme)
