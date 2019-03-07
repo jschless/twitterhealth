@@ -8,12 +8,16 @@ from features import *
 from sklearn.metrics import confusion_matrix
 import matplotlib.pyplot as plt
 
+
 class Classifier:
     def __init__(self):
         self.threads = pd.Series(
             [t for t in phemeParser.parsePheme()]
         )
-        self.model = MLPClassifier(solver='lbfgs')
+        self.model = MLPClassifier(
+            solver='lbfgs',
+            hidden_layer_sizes=(1000, 1000, 1000)
+        )
 
     def kfold(self, X, y, verbose=False, n_splits=5):
         """Trains model using kfold cross validation
@@ -54,9 +58,13 @@ class Classifier:
         print('best score was %s\nworst score was %s' % (best, worst))
         if verbose:
             class_names = np.array(['false', 'true', 'unverified'])
-            plot_confusion_matrix(y_true_best, y_pred_best, classes=class_names)
+            plot_confusion_matrix(
+                y_true_best, y_pred_best, classes=class_names
+            )
             plt.show()
-            plot_confusion_matrix(y_true_worst, y_pred_worst, classes=class_names)
+            plot_confusion_matrix(
+                y_true_worst, y_pred_worst, classes=class_names
+            )
             plt.show()
 
         self.model = best_mod
@@ -109,6 +117,7 @@ class Classifier:
         index = probMap[prediction[0]]
         prob = probMat[0, index]/np.sum(probMat[0])
         return prediction, prob
+
 
 def plot_confusion_matrix(y_true, y_pred, classes,
                           normalize=False,

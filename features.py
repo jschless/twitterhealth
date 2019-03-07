@@ -15,6 +15,8 @@ def tweet_sentiment(tweet):
 
 
 def sentiment(text):
+    if text is None:
+        return 0
     from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
     analyzer = SentimentIntensityAnalyzer()
     scores = analyzer.polarity_scores(text)
@@ -39,19 +41,18 @@ def description_sentiment(tweet):
 
 
 def screen_name_sentiment(tweet):
-    if tweet.user.screenName == None:
-        return -1
-    else:
-        return sentiment(tweet.user.screen_name)
+    return sentiment(tweet.user.screen_name)
 
 
 def verified(tweet):
     return 1 if tweet.user.verified else 0
 
+
 features = [
         follow_ratio, tweet_sentiment, retweet_count, favorite_count, verified,
         name_sentiment, description_sentiment, screen_name_sentiment
     ]
+
 
 def graph_weight(tweet, func):
     reply_chain = tweet.reply_chain
