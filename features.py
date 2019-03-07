@@ -10,13 +10,16 @@ def follow_ratio(tweet):
     return (user.followers_count/user.friends_count)
 
 
-def sentiment(tweet):
-    text = tweet.text
+def tweet_sentiment(tweet):
+    return sentiment(tweet.text)
+
+
+def sentiment(text):
     from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
     analyzer = SentimentIntensityAnalyzer()
     scores = analyzer.polarity_scores(text)
-    sentiment = scores['pos']-scores['neg']
-    return sentiment
+    sent = scores['pos']-scores['neg']
+    return sent
 
 
 def retweet_count(tweet):
@@ -27,7 +30,28 @@ def favorite_count(tweet):
     return tweet.favorite_count
 
 
-features = [follow_ratio, sentiment, retweet_count, favorite_count]
+def name_sentiment(tweet):
+    return sentiment(tweet.user.name)
+
+
+def description_sentiment(tweet):
+    return sentiment(tweet.user.description)
+
+
+def screen_name_sentiment(tweet):
+    if tweet.user.screenName == None:
+        return -1
+    else:
+        return sentiment(tweet.user.screen_name)
+
+
+def verified(tweet):
+    return 1 if tweet.user.verified else 0
+
+features = [
+        follow_ratio, tweet_sentiment, retweet_count, favorite_count, verified,
+        name_sentiment, description_sentiment, screen_name_sentiment
+    ]
 
 def graph_weight(tweet, func):
     reply_chain = tweet.reply_chain
