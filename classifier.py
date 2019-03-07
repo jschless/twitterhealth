@@ -50,12 +50,6 @@ class Classifier:
 
             totalScore += score
 
-        print(
-            'average score for %s tests is %s' % (
-                n_splits, totalScore/n_splits
-            )
-        )
-        print('best score was %s\nworst score was %s' % (best, worst))
         if verbose:
             class_names = np.array(['false', 'true', 'unverified'])
             plot_confusion_matrix(
