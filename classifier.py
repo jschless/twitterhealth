@@ -10,12 +10,15 @@ import matplotlib.pyplot as plt
 
 
 class Classifier:
-    def __init__(self):
+    def __init__(self, folds):
         self.threads = pd.Series(phemeParser.parsePheme())
         self.model = MLPClassifier(
             solver='lbfgs',
             hidden_layer_sizes=(1000, 1000, 1000)
         )
+        self.folds = folds
+        print('[info] Multi-Layer Perceptron Classifier')
+        print('[info] Validation: K-fold with %s folds' % self.folds)
 
     def kfold(self, X, y, verbose=False, n_splits=5):
         """Trains model using kfold cross validation
@@ -95,7 +98,7 @@ class Classifier:
         """
         start_time = time.time()
         input, labels = self.buildInputAndLabels(self.threads)
-        self.kfold(input, labels, n_splits=2, verbose=verb)
+        self.kfold(input, labels, n_splits=self.folds, verbose=verb)
         if testTweets is not None:
             testX = self.buildInput(testTweets)
             self.model.predict(textX)

@@ -12,7 +12,7 @@ access_token_secret = cfg.twitter['access_token_secret']
 
 
 class TwitWindow:
-    def __init__(self):
+    def __init__(self, classifier):
         auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
         auth.set_access_token(access_token, access_token_secret)
         self.api = tweepy.API(auth)
@@ -21,8 +21,7 @@ class TwitWindow:
         # Lists to hold the labels and text areas
         self.texts = []
         self.labels = []
-        self.classifier = classifier.Classifier()
-        self.classifier.run()
+        self.classifier = classifier
 
     def CreateWindow(self):
         # Create the main window
