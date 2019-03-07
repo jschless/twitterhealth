@@ -80,11 +80,14 @@ class Classifier:
 
         # This is where the features from features.py are integrated
         inputs = pd.DataFrame()
-        inputs['follow_ratio'] = data.apply(follow_ratio)
+        for func in features:
+            func_name = str(func).split(' ')[1]
+            inputs[func_name] = data.apply(func)
+#        inputs['follow_ratio'] = data.apply(follow_ratio)
         inputs['graph_follow_ratio'] = data.apply(
             lambda x: graph_weight(x, follow_ratio)
         )
-        inputs['sentiment'] = data.apply(sentiment)
+#        inputs['sentiment'] = data.apply(sentiment)
         return inputs
 
     def run(self, verb=False, testTweets=None):

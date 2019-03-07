@@ -19,6 +19,16 @@ def sentiment(tweet):
     return sentiment
 
 
+def retweet_count(tweet):
+    return tweet.retweet_count
+
+
+def favorite_count(tweet):
+    return tweet.favorite_count
+
+
+features = [follow_ratio, sentiment, retweet_count, favorite_count]
+
 def graph_weight(tweet, func):
     reply_chain = tweet.reply_chain
     if reply_chain is None:
