@@ -58,19 +58,11 @@ def follow_ratio(tweet):
     return (user.followers_count/user.friends_count)
 ~~~~
 
-Next, you add it to the input vector. Within classification.py, edit the function buildInput().
+Finally, you add it to the list called 'features' which is also in features.py:
 
 ~~~~
-inputs = pd.DataFrame()
-inputs['follow_ratio'] = data.apply(follow_ratio)
-inputs['graph_follow_ratio'] = data.apply(
-      lambda x : graph_weight(x, follow_ratio)
-)
-inputs['sentiment'] = data.apply(sentiment)
-return inputs
+features = [follow_ratio, sentiment, retweet_count, favorite_count]
 ~~~~~
-
-The formula for adding is simply `inputs['name_of_feature'] = data.apply(name_of_function) ` Here, it will be used in both the training of the model and the Twitter GUI.
 
 ### Tweet and User Objects
 The Tweet and User objects we use correspond to those outlined by Twitter. Twitter has defined the different attributes for Tweet [here](https://developer.twitter.com/en/docs/tweets/data-dictionary/overview/tweet-object) and User [here](https://developer.twitter.com/en/docs/tweets/data-dictionary/overview/user-object).
