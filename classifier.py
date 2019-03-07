@@ -11,9 +11,7 @@ import matplotlib.pyplot as plt
 
 class Classifier:
     def __init__(self):
-        self.threads = pd.Series(
-            [t for t in phemeParser.parsePheme()]
-        )
+        self.threads = pd.Series(phemeParser.parsePheme())
         self.model = MLPClassifier(
             solver='lbfgs',
             hidden_layer_sizes=(1000, 1000, 1000)
