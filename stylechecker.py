@@ -1,4 +1,5 @@
-import os, subprocess
+import os
+import subprocess
 
 print('*** Running style checker on directory. ****')
 

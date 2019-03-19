@@ -37,6 +37,7 @@ class User:
     def __str__(self):
         return self.screen_name
 
+
 class Entities:
     def __init__(self, dict):
         for key, value in dict.items():

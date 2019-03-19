@@ -8,11 +8,13 @@ def main(argv):
     help = 'main.py [-t -v -f --test]\n'
     help += '-t or --twitter : runs classifier within twitter GUI\n'
     help += '-v or --verbose : prints extra information\n'
-    help += '-f [folds] or --folds=[folds] : set number of folds for validation\n'
+    help += '-f [folds] or --folds=[folds] : set number of folds '
+    help += 'for validation\n'
     help += '--test : runs test code [TODO]\n'
     try:
         opts, args = getopt.getopt(
-            argv, "htcvf:", ['twitter', 'classifier', 'verbose', 'test', 'folds=']
+            argv, "htcvf:",
+            ['twitter', 'classifier', 'verbose', 'test', 'folds=']
         )
     except getopt.GetoptError:
         print(help)
@@ -46,6 +48,7 @@ def main(argv):
         if twitter:
             win = twitterGUI.TwitWindow(clf)
             win.CreateWindow()
+
 
 if __name__ == '__main__':
     main(sys.argv[1:])
