@@ -19,6 +19,12 @@ class Tweet(object):
                 entities = Entities(value)
                 self.entities = entities
 
+    def csvTweet(self, dict):
+        self.phemeTweet(dict)
+        self.id = int(self.tweetid)
+        self.id_str = str(self.tweetid)
+        self.text = self.tweet_text
+
     def to_dict(self):
         dict = {}
         for key, value in vars(self).items():
@@ -37,6 +43,17 @@ class User:
     def __str__(self):
         return self.screen_name
 
+    def csvUser(self, dict):
+        self.phemeUser(dict)
+        self.screen_name = self.user_screen_name
+        self.display_name = self.user_display_name
+        self.location = self.user_reported_location
+        self.description = self.user_profile_description
+        self.friends_count = self.following_count
+        self.created_at = self.account_creation_date
+        self.lang = self.account_language
+
+        
 class Entities:
     def __init__(self, dict):
         for key, value in dict.items():
