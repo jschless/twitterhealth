@@ -1,3 +1,5 @@
+import sys
+sys.path.insert(0, 'C:\\Users\\EECS\\Twitterhealth\\Src')
 from classifier import Classifier
 from phemeParser import parsePheme
 import time

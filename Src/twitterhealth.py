@@ -38,7 +38,7 @@ def main(argv):
             folds = arg
 
     if test:
-        subprocess.call(['pytest', 'test_net.py'])
+        subprocess.call(['pytest', '..\\Test\\test_net.py'])
     else:
         clf = classifier.Classifier(folds=folds)
         if verbose:
