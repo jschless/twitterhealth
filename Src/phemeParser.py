@@ -6,6 +6,7 @@ from itertools import chain
 from tweet import *
 from anytree import Node, RenderTree, DoubleStyle, AsciiStyle
 from pprint import pprint
+import pickle
 import itertools
 import twitconfig as cfg
 pathToPheme = cfg.pheme_path
@@ -112,3 +113,8 @@ def parsePheme():
     global annotations
     annotations = loadAnnotations(pathToPheme)
     return crawlDirectory(pathToPheme)
+
+    temp = crawlDirectory(pathToPheme)
+    with open('input_test.pkl', 'wb') as outfile:
+        pickle.dump(temp, outfile, pickle.HIGHEST_PROTOCOL)
+    return temp

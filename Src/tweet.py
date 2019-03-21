@@ -25,6 +25,9 @@ class Tweet(object):
             dict[key] = value
         return dict
 
+    def __eq__(self, other):
+        return self.text == other.text
+
     def __str__(self):
         return self.text + ' - ' + self.user.screen_name
 
@@ -37,8 +40,26 @@ class User:
     def __str__(self):
         return self.screen_name
 
+    def to_dict(self):
+        dict = {}
+        for key, value in vars(self).items():
+            dict[key] = value
+        return dict
+
+    def __eq__(self, other):
+        return self.__dict__ == other.__dict__
+
 
 class Entities:
     def __init__(self, dict):
         for key, value in dict.items():
             setattr(self, key, value)
+
+    def to_dict(self):
+        dict = {}
+        for key, value in vars(self).items():
+            dict[key] = value
+        return dict
+
+    def __eq__(self, other):
+        return self.__dict__ == other.__dict__

@@ -2,7 +2,7 @@ import sys
 import getopt
 import classifier
 import twitterGUI
-
+import subprocess
 
 def main(argv):
     help = 'main.py [-t -v -f --test]\n'
