@@ -3,9 +3,6 @@ from phemeParser import parsePheme
 import time
 import pickle
 
-# Sanity check test for when I inevitably break the other ones
-# def test_num():
-# 	assert 9==8
 
 def test_class_timing():
 	print("classification timing")
