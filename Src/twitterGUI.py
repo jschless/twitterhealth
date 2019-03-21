@@ -1,4 +1,5 @@
 import tweepy
+import random
 import tkinter
 from tweet import *
 import classifier
@@ -57,7 +58,14 @@ class TwitWindow:
                 tweet = Tweet()
                 tweet.phemeTweet(tweetJSON)
                 prediction, probability = self.classifier.predict(tweet)
+                prediction = random.randint(1,4)
+                if prediction == 1:
+                    self.labels[i].config(bg="red")
+                if prediction == 2:
+                    self.labels[i].config(bg="green")
+                if prediction == 3:
+                    self.labels[i].config(bg='yellow')
                 print(statuses[i].text)
-                print('Prediction: ' + prediction)
+                print('Prediction: ' + str(prediction))
                 print('Probability: ' + str(probability))
                 self.texts[i].insert(tkinter.END, statuses[i].text)
