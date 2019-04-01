@@ -12,16 +12,19 @@ datasets = [
     # ("iranian_tweets_csv_hashed.csv", "iranian_users_csv_hashed")
 ]
 
+
 def load_data():
     tweets = pd.concat(
         [pd.read_csv(path + '\\' + tweets, nrows=n_tweets, encoding='utf-8')
             for tweets, users in datasets]
     )
     users = pd.concat(
-        [pd.read_csv(path + '\\' + users, encoding='utf-8') for tweets, users in datasets]
+        [pd.read_csv(path + '\\' + users, encoding='utf-8')
+            for tweets, users in datasets]
     )
 
     return tweets, users
+
 
 def parse_election():
     tweets, users = load_data()
@@ -37,5 +40,3 @@ def parse_election():
         user.csvUser(temp)
         tweet.user = user
         return_list.append(tweet)
-
-return_list = parse_election()

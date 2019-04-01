@@ -58,7 +58,6 @@ class TwitWindow:
                 tweet = Tweet()
                 tweet.phemeTweet(tweetJSON)
                 prediction, probability = self.classifier.predict(tweet)
-                prediction = random.randint(1,4)
                 if prediction == 1:
                     self.labels[i].config(bg="red")
                 if prediction == 2:
