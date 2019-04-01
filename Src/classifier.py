@@ -7,11 +7,17 @@ from sklearn.model_selection import KFold
 from features import *
 from sklearn.metrics import confusion_matrix
 import matplotlib.pyplot as plt
+import time
 
 
 class Classifier:
-    def __init__(self, folds):
+    def __init__(self, folds, timing=False):
+        self.timing = timing
+        start = time.time()
         self.threads = pd.Series(phemeParser.parsePheme())
+        end = time.time()
+        if self.timing:
+            print('parsing time: ' + str(end - start))
         self.model = MLPClassifier(
             solver='lbfgs',
             hidden_layer_sizes=(1000, 1000, 1000)
@@ -96,14 +102,19 @@ class Classifier:
         listOfThreads: input from PHEME to train datasets
         testTweets: list of Tweets to predict on
         """
+        start = time.time()
         start_time = time.time()
         input, labels = self.buildInputAndLabels(self.threads)
         self.kfold(input, labels, n_splits=self.folds, verbose=verb)
         if testTweets is not None:
             testX = self.buildInput(testTweets)
             self.model.predict(textX)
+        end = time.time()
+        if self.timing:
+            print('model training time: ' + str(end - start))
 
     def predict(self, tweet):
+        start = time.time()
         probMap = {'false': 0, 'true': 1, 'unverified': 2}
         df = pd.Series([tweet])
         input = self.buildInput(df)
@@ -111,6 +122,9 @@ class Classifier:
         probMat = self.model.predict_proba(input)
         index = probMap[prediction[0]]
         prob = probMat[0, index]/np.sum(probMat[0])
+        end = time.time()
+        if self.timing:
+            print('time to classify a tweet: ' + str(end - start))
         return prediction, prob
 
 

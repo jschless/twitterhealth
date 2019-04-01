@@ -10,11 +10,12 @@ def main(argv):
     help += '-v or --verbose : prints extra information\n'
     help += '-f [folds] or --folds=[folds] : set number of folds '
     help += 'for validation\n'
-    help += '--test : runs test code [TODO]\n'
+    help += '--test : runs test code\n'
+    help += '--timing : runs timing code\n'
     try:
         opts, args = getopt.getopt(
             argv, "htcvf:",
-            ['twitter', 'classifier', 'verbose', 'test', 'folds=']
+            ['twitter', 'classifier', 'verbose', 'test', 'timing', 'folds=']
         )
     except getopt.GetoptError:
         print(help)
@@ -23,6 +24,7 @@ def main(argv):
     twitter = False
     verbose = False
     test = False
+    timing = False
     folds = 5
     for opt, arg in opts:
         if opt == '-h':
@@ -36,11 +38,12 @@ def main(argv):
             test = True
         elif opt in ('-f', '--folds'):
             folds = arg
-
+        elif opt in ('--timing'):
+            timing = True
     if test:
         subprocess.call(['pytest', '..\\Test\\test_net.py'])
     else:
-        clf = classifier.Classifier(folds=folds)
+        clf = classifier.Classifier(folds=folds, timing=timing)
         if verbose:
             clf.run(verb=True)
         else:
