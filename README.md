@@ -9,12 +9,15 @@ We are creating a classifier for tweets to help users determine the credibility 
 We use the PHEME dataset in this project. The dataset can be found here: [PHEME](https://figshare.com/articles/PHEME_rumour_scheme_dataset_journalism_use_case/2068650)
 
 ## Files
+The following files encompass our source code for the project:
+
 - tweet.py : This file defines the Tweet and User data structure along with some useful functions
 - phemeParser.py : This file processes the PHEME dataset into a list of annotated conversation threads
 - classifier.py : This file trains a classifier on the PHEME dataset according to features
 - features.py : This file contains all of the feature engineering
 - twitterhealth.py : This is the main file for running the project code
 - stylechecker.py : This is a script that checks all Python files in the repository and ensures concordance with the published Python style guidelines
+- electionTester.py : This allows us to test our classifier on different databases. Twitter has released a number of unlabeled datasets, which can be tested by our classifier in an intuitive way through this parser script.
 
 ## How to Run Our Code
 It is easy to get this code working and reproduce our results.
