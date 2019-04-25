@@ -18,9 +18,13 @@ class TwitWindow:
         auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
         auth.set_access_token(access_token, access_token_secret)
         self.api = tweepy.API(auth)
-        self.public_tweets = self.api.home_timeline()
-        self.num_entries = len(self.public_tweets)
         self.data = data
+        if data == 'Live':
+            self.public_tweets = self.api.home_timeline()
+        elif data == 'Election':
+            self.public_tweets = electionTester.parse_election()
+
+        self.num_entries = len(self.public_tweets)
         # Lists to hold the labels and text areas
         self.texts = []
         self.labels = []
@@ -30,6 +34,8 @@ class TwitWindow:
         # Create the main window
         self.tkroot = tkinter.Tk()
         self.tkroot.title("Fake News Detector")
+        # self.scrollbar = tkinter.Scrollbar(self.tkroot)
+        # self.scrollbar.pack(side = RIGHT, fill = Y)
         # Create all the labels and text widgets:
         for i in range(0, self.num_entries):
             self.labels.append(tkinter.Label(self.tkroot))
@@ -45,30 +51,32 @@ class TwitWindow:
         self.tkroot.mainloop()
 
     def updateWindow(self):
-        if self.data == 'Live':
-            statuses = self.api.home_timeline()
-        elif self.data == 'Election':
-            statuses = electionTester.parse_election()
+        statuses = self.public_tweets
         for i in range(0, self.num_entries):
             self.texts[i].delete(1.0, tkinter.END)  # Clear the old text
 
             if i < len(statuses):
                 # Update the label with the user's name and screen name
                 user = statuses[i].user
-                labeltext = user.name + " (" + user.screen_name + ")"
+                if self.data == 'Live':
+                    labeltext = user.name + " (" + user.screen_name + ")"
+                else:
+                    labeltext = 'anonymous user'
                 self.labels[i].config(text=labeltext)
 
                 # Display the text of the tweet
-                tweetJSON = vars(statuses[i])['_json']
-                tweet = Tweet()
-                tweet.phemeTweet(tweetJSON)
+                if self.data == 'Live':
+                    tweetJSON = vars(statuses[i])['_json']
+                    tweet = Tweet()
+                    tweet.phemeTweet(tweetJSON)
+                else:
+                    tweet = statuses[i]
                 prediction, probability = self.classifier.predict(tweet)
-                prediction = random.randint(1,4)
-                if prediction == 1:
+                if prediction == 0:
                     self.labels[i].config(bg="red")
-                if prediction == 2:
+                if prediction == 1:
                     self.labels[i].config(bg="green")
-                if prediction == 3:
+                if prediction == 2:
                     self.labels[i].config(bg='yellow')
                 print(statuses[i].text)
                 print('Prediction: ' + str(prediction))

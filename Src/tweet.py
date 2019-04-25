@@ -24,6 +24,7 @@ class Tweet(object):
         self.id = int(self.tweetid)
         self.id_str = str(self.tweetid)
         self.text = self.tweet_text
+        self.favorite_count = self.like_count
 
     def to_dict(self):
         dict = {}
@@ -50,11 +51,15 @@ class User:
         self.phemeUser(dict)
         self.screen_name = self.user_screen_name
         self.display_name = self.user_display_name
+        self.name = self.user_display_name
         self.location = self.user_reported_location
-        self.description = self.user_profile_description
+        self.description = str(self.user_profile_description)
         self.friends_count = self.following_count
+        self.followers_count = self.follower_count
         self.created_at = self.account_creation_date
         self.lang = self.account_language
+        self.verified = False
+
     def to_dict(self):
         dict = {}
         for key, value in vars(self).items():

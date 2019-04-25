@@ -13,7 +13,8 @@ def main(argv):
     --test : runs test code\n
     --timing : runs timing code\n
     -m [model] or --model=[model]: sets model to be tested\n
-    --results: run test with many models'''
+    --results: run test with many models\# NOTE:
+    -e or --election: runs model and displays election interference tweets'''
 
     try:
         opts, args = getopt.getopt(
@@ -31,7 +32,7 @@ def main(argv):
     timing = False
     election_data = False
     model = 'MLP'
-    folds = 5
+    folds = 2
     for opt, arg in opts:
         if opt == '-h':
             print(help)

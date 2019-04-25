@@ -128,13 +128,13 @@ class Classifier:
         labels = data.apply(convert_annotations)
         return input, labels
 
-    def buildInput(self, data, load_pickle=True):
+    def buildInput(self, data, live_data=False, load_pickle=True):
         """Outputs input vectors for unlabeled datasets
 
         Keyword arguments:
         data -- input list of threads
         """
-        if load_pickle:
+        if load_pickle and not live_data:
             return pd.read_pickle('features_3.pkl')
         else:
             inputs = pd.DataFrame()
@@ -148,7 +148,7 @@ class Classifier:
                 inputs['graph_' + func_name] = data.apply(
                     lambda x: graph_weight(x, func)
                 )
-            # inputs.to_pickle('features_2.pkl')
+            inputs.to_pickle('features_4.pkl')
         return inputs
 
     def run(self, verb=False, testTweets=None):
@@ -171,15 +171,16 @@ class Classifier:
         start = time.time()
         probMap = {'false': 0, 'true': 1, 'unverified': 2}
         df = pd.Series([tweet])
-        input = self.buildInput(df)
+        input = self.buildInput(df, live_data=True)
         prediction = self.model.predict(input)
         probMat = self.model.predict_proba(input)
+
         index = probMap[prediction[0]]
         prob = probMat[0, index]/np.sum(probMat[0])
         end = time.time()
         if self.timing:
             print('time to classify a tweet: ' + str(end - start))
-        return prediction, prob
+        return index, prob
 
 
 def plot_confusion_matrix(y_true, y_pred, classes,
