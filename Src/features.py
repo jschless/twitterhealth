@@ -2,6 +2,7 @@ from tweet import *
 from anytree import Node, RenderTree, AsciiStyle, LevelOrderIter
 import pickle
 
+
 def follow_rat(tweet):
     user = tweet.user
     if user.friends_count == 0:

@@ -3,7 +3,7 @@ import twitconfig as cfg
 from tweet import *
 path = cfg.election_interference_path
 
-n_tweets = 100
+n_tweets = 10000
 
 # datasets must come from Twitter
 # https://about.twitter.com/en_us/values/elections-integrity.html#data
@@ -12,16 +12,19 @@ datasets = [
     # ("iranian_tweets_csv_hashed.csv", "iranian_users_csv_hashed")
 ]
 
+
 def load_data():
     tweets = pd.concat(
         [pd.read_csv(path + '\\' + tweets, nrows=n_tweets, encoding='utf-8')
             for tweets, users in datasets]
     )
     users = pd.concat(
-        [pd.read_csv(path + '\\' + users, encoding='utf-8') for tweets, users in datasets]
+        [pd.read_csv(path + '\\' + users, encoding='utf-8')
+            for tweets, users in datasets]
     )
 
     return tweets, users
+
 
 def parse_election():
     tweets, users = load_data()

@@ -69,6 +69,7 @@ class User:
     def __eq__(self, other):
         return self.__dict__ == other.__dict__
 
+
 class Entities:
     def __init__(self, dict):
         for key, value in dict.items():

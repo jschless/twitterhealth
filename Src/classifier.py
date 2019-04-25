@@ -54,7 +54,7 @@ class Classifier:
         elif model == 'GAUS':
             self.model = GaussianProcessClassifier()
             print('[info] Gaussian Process Classifier')
-        elif model =='TREE':
+        elif model == 'TREE':
             self.model = tree.DecisionTreeClassifier()
             print('[info] Decision Tree Classifier')
         self.folds = folds
@@ -93,11 +93,7 @@ class Classifier:
         print(classification_report(y_true_worst, y_pred_worst))
         print(confusion_matrix(y_true_worst, y_pred_worst))
         if self.type == 'TREE':
-            dot_data = tree.export_graphviz(best_mod, out_file=None, feature_names=X.columns, filled=True, rounded=True, special_characters=True)
-            graph = graphviz.Source(dot_data)
-            graph.render('Decision Tree')
             data = dict(zip(X.columns, best_mod.feature_importances_))
-            print(data)
             plt.bar(range(len(data)), list(data.values()), align='center')
             plt.xticks(range(len(data)), list(data.keys()), rotation=90)
             plt.tight_layout()
@@ -201,7 +197,7 @@ def plot_confusion_matrix(y_true, y_pred, classes,
 
     # Compute confusion matrix
     cm = confusion_matrix(y_true, y_pred)
-    false_positive = cm[0,1]/(np.sum(cm[0]))
+    false_positive = cm[0, 1]/(np.sum(cm[0]))
     print('false positive rate: ' + str(false_positive))
     if normalize:
         cm = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]

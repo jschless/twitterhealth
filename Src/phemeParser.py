@@ -107,30 +107,41 @@ def processTweetJSON(path, is_reply, labelled=True):
         # keeps dataframe id out of the mix
         return tweet
 
+
 def more_pheme():
     path = 'C:\\Users\\EECS\\Documents\\pheme-rnr-dataset'
     allTweets = []
     for topic in os.listdir(path):
         if not topic == 'README':
-            allTweets += processTopic(os.path.join(path,topic), 'rumours')
-            allTweets += processTopic(os.path.join(path,topic), 'non-rumours')
+            allTweets += processTopic(os.path.join(path, topic), 'rumours')
+            allTweets += processTopic(os.path.join(path, topic), 'non-rumours')
     return allTweets
+
 
 def processTopic(path, type):
     topicTweets = []
     for tweet in os.listdir(os.path.join(path, type)):
-        tempTweet = processTweetJSON(os.path.join(path, type, tweet, 'source-tweet', tweet+'.json'), False, labelled=False)
+        tempTweet = processTweetJSON(os.path.join(path, type, tweet,
+                                                  'source-tweet',
+                                                  tweet+'.json'),
+                                     False, labelled=False
+                                     )
         tempTweet.annotation = (type == 'rumours')
         tempTweet.thread_annotation = (type == 'rumours')
         root = Node(str(tempTweet.id), tweet=tempTweet)
         for reply in os.listdir(os.path.join(path, type, tweet, 'reactions')):
-            tempReply = processTweetJSON(os.path.join(path, type, tweet, 'reactions', reply), False, labelled=False)
+            tempReply = processTweetJSON(os.path.join(path, type, tweet,
+                                                      'reactions', reply),
+                                         False, labelled=False)
             tempNode = Node(str(tempReply.id), parent=root,
-                        tweet=tempReply)
+                            tweet=tempReply)
         tempTweet.reply_chain = root
-        tempTweet.size = len(os.listdir(os.path.join(path, type, tweet, 'reactions'))) + 1
+        tempTweet.size = len(os.listdir(os.path.join(path, type, tweet,
+                                                     'reactions'))) + 1
         topicTweets.append(tempTweet)
     return topicTweets
+
+
 def parsePheme():
     """Parses PHEME dataset and returns a list of all conversation threads
 
