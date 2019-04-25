@@ -14,6 +14,7 @@ We use the PHEME dataset in this project. The dataset can be found here: [PHEME]
 - classifier.py : This file trains a classifier on the PHEME dataset according to features
 - features.py : This file contains all of the feature engineering
 - twitterhealth.py : This is the main file for running the project code
+- stylechecker.py : This is a script that checks all Python files in the repository and ensures concordance with the published Python style guidelines
 
 ## How to Run Our Code
 It is easy to get this code working and reproduce our results.
