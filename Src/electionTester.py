@@ -37,5 +37,4 @@ def parse_election():
         user.csvUser(temp)
         tweet.user = user
         return_list.append(tweet)
-
-return_list = parse_election()
+    return return_list

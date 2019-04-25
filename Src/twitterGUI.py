@@ -4,6 +4,7 @@ import tkinter
 from tweet import *
 import classifier
 import pandas as pd
+import electionTester
 from pprint import pprint
 import twitconfig as cfg
 consumer_key = cfg.twitter['consumer_key']
@@ -13,12 +14,13 @@ access_token_secret = cfg.twitter['access_token_secret']
 
 
 class TwitWindow:
-    def __init__(self, classifier):
+    def __init__(self, classifier, data='Live'):
         auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
         auth.set_access_token(access_token, access_token_secret)
         self.api = tweepy.API(auth)
         self.public_tweets = self.api.home_timeline()
         self.num_entries = len(self.public_tweets)
+        self.data = data
         # Lists to hold the labels and text areas
         self.texts = []
         self.labels = []
@@ -43,7 +45,10 @@ class TwitWindow:
         self.tkroot.mainloop()
 
     def updateWindow(self):
-        statuses = self.api.home_timeline()
+        if self.data == 'Live':
+            statuses = self.api.home_timeline()
+        elif self.data == 'Election':
+            statuses = electionTester.parse_election()
         for i in range(0, self.num_entries):
             self.texts[i].delete(1.0, tkinter.END)  # Clear the old text
 

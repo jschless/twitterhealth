@@ -17,8 +17,8 @@ def main(argv):
 
     try:
         opts, args = getopt.getopt(
-            argv, "htcvf:m:",
-            ['twitter', 'classifier', 'verbose', 'test', 'timing', 'folds=', 'model=', 'results']
+            argv, "htcvef:m:",
+            ['twitter', 'classifier', 'verbose', 'test', 'timing', 'folds=', 'model=', 'results', 'election']
         )
     except getopt.GetoptError:
         print(help)
@@ -29,6 +29,7 @@ def main(argv):
     test = False
     results = False
     timing = False
+    election_data = False
     model = 'MLP'
     folds = 5
     for opt, arg in opts:
@@ -49,6 +50,8 @@ def main(argv):
             model = arg
         elif opt in ('--results'):
             results = True
+        elif opt in ('-e', '--election'):
+            election_data = True
     if results:
         n = 3
         for model in ['MLP', 'SVC', 'SGD', 'NN', 'GAUS', 'TREE']:
@@ -64,7 +67,10 @@ def main(argv):
         else:
             clf.run()
         if twitter:
-            win = twitterGUI.TwitWindow(clf)
+            if election_data:
+                win = twitterGUI.TwitWindow(clf, data='Election')
+            else:
+                win = twitterGUI.TwitWindow(clf)
             win.CreateWindow()
 
 
