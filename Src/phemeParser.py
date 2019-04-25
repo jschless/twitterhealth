@@ -66,6 +66,7 @@ def processTweetFolder(path, tweetid):
     root = Node(str(tweetid), tweet=thread)
     processTree(thread.thread_structure[tweetid], root, path + '\\reactions\\')
     thread.reply_chain = root
+    thread.size = len(root.descendants)
     # print(RenderTree(root, style=AsciiStyle))
     thread.thread_id = tweetid
     return thread
@@ -86,7 +87,7 @@ def processTree(children, parent, path):
         processTree(value, temp, path)
 
 
-def processTweetJSON(path, is_reply):
+def processTweetJSON(path, is_reply, labelled=True):
     """Processes and returns an individual tweet JSON
 
     Keyword arguments:
@@ -99,22 +100,47 @@ def processTweetJSON(path, is_reply):
         data = json.load(f)
         tweet = Tweet()
         tweet.phemeTweet(data)
-        tweet.annotation = annotations[
-            annotations['tweetid'] == tweet.id
-        ].to_dict('r')
+        if labelled:
+            tweet.annotation = annotations[
+                annotations['tweetid'] == tweet.id
+            ].to_dict('r')
         # keeps dataframe id out of the mix
         return tweet
 
+def more_pheme():
+    path = 'C:\\Users\\EECS\\Documents\\pheme-rnr-dataset'
+    allTweets = []
+    for topic in os.listdir(path):
+        if not topic == 'README':
+            allTweets += processTopic(os.path.join(path,topic), 'rumours')
+            allTweets += processTopic(os.path.join(path,topic), 'non-rumours')
+    return allTweets
 
+def processTopic(path, type):
+    topicTweets = []
+    for tweet in os.listdir(os.path.join(path, type)):
+        tempTweet = processTweetJSON(os.path.join(path, type, tweet, 'source-tweet', tweet+'.json'), False, labelled=False)
+        tempTweet.annotation = (type == 'rumours')
+        tempTweet.thread_annotation = (type == 'rumours')
+        root = Node(str(tempTweet.id), tweet=tempTweet)
+        for reply in os.listdir(os.path.join(path, type, tweet, 'reactions')):
+            tempReply = processTweetJSON(os.path.join(path, type, tweet, 'reactions', reply), False, labelled=False)
+            tempNode = Node(str(tempReply.id), parent=root,
+                        tweet=tempReply)
+        tempTweet.reply_chain = root
+        tempTweet.size = len(os.listdir(os.path.join(path, type, tweet, 'reactions'))) + 1
+        topicTweets.append(tempTweet)
+    return topicTweets
 def parsePheme():
     """Parses PHEME dataset and returns a list of all conversation threads
 
     """
     global annotations
     annotations = loadAnnotations(pathToPheme)
-    return crawlDirectory(pathToPheme)
+    return crawlDirectory(pathToPheme) + more_pheme()
 
-    temp = crawlDirectory(pathToPheme)
-    with open('input_test.pkl', 'wb') as outfile:
-        pickle.dump(temp, outfile, pickle.HIGHEST_PROTOCOL)
-    return temp
+    # If input changes and you need to save the new correct input, uncomment
+    # temp = crawlDirectory(pathToPheme)
+    # with open('input_test.pkl', 'wb') as outfile:
+    #    pickle.dump(temp, outfile, pickle.HIGHEST_PROTOCOL)
+    # return temp

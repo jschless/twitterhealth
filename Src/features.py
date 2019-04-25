@@ -1,16 +1,16 @@
 from tweet import *
 from anytree import Node, RenderTree, AsciiStyle, LevelOrderIter
+import pickle
 
-
-def follow_ratio(tweet):
+def follow_rat(tweet):
     user = tweet.user
     if user.friends_count == 0:
-        print('[warning] user ' + str(user) + ' has zero friends')
-        return 0
+        # print('[warning] user ' + str(user) + ' has zero friends')
+        return user.followers_count
     return (user.followers_count/user.friends_count)
 
 
-def tweet_sentiment(tweet):
+def tweet_sent(tweet):
     return sentiment(tweet.text)
 
 
@@ -24,23 +24,23 @@ def sentiment(text):
     return sent
 
 
-def retweet_count(tweet):
+def retweets(tweet):
     return tweet.retweet_count
 
 
-def favorite_count(tweet):
+def favorites(tweet):
     return tweet.favorite_count
 
 
-def name_sentiment(tweet):
+def name_sent(tweet):
     return sentiment(tweet.user.name)
 
 
-def description_sentiment(tweet):
+def desc_sent(tweet):
     return sentiment(tweet.user.description)
 
 
-def screen_name_sentiment(tweet):
+def s_name_sent(tweet):
     return sentiment(tweet.user.screen_name)
 
 
@@ -49,8 +49,8 @@ def verified(tweet):
 
 
 features = [
-        follow_ratio, tweet_sentiment, retweet_count, favorite_count, verified,
-        name_sentiment, description_sentiment, screen_name_sentiment
+        follow_rat, tweet_sent, retweets, favorites, verified,
+        name_sent, desc_sent, s_name_sent
     ]
 
 
@@ -68,6 +68,19 @@ def graph_weight(tweet, func):
 
 def convert_annotations(tweet, isString=True):
     annotation = tweet.thread_annotation
+
+    if isinstance(annotation, bool):
+        if annotation:
+            if isString:
+                label = "true"
+            else:
+                label = 1
+        else:
+            if isString:
+                label = "false"
+            else:
+                label = 0
+        return label
     if 'misinformation' in annotation.keys() and 'true'in annotation.keys():
         if (
             int(annotation['misinformation']) == 0 and
