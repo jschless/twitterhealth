@@ -22,7 +22,7 @@ We use two PHEME datasets in this project. The datasets can be found here: [PHEM
 It is easy to get this code working and reproduce our results.
 
 ### Setting up the Development Environment
-1. You will need Python 3. Download the PHEME dataset found here: [PHEME](https://figshare.com/articles/PHEME_rumour_scheme_dataset_journalism_use_case/2068650).
+1. You will need Python 3. Download the PHEME dataset found here [PHEME1](https://figshare.com/articles/PHEME_rumour_scheme_dataset_journalism_use_case/2068650) and here [PHEME2](https://figshare.com/articles/PHEME_dataset_of_rumours_and_non-rumours/4010619).
 
 2. Create a config file called `twitconfig.py` with the access keys from your Twitter application. The contents of the code should be as follows but replacing the values in the dictionary with your individual account values. Add the path to the pheme dataset in this config file.
 ~~~~
