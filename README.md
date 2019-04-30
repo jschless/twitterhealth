@@ -6,7 +6,9 @@ We are creating a classifier for tweets to help users determine the credibility 
 
 
 ## Dataset
-We use the PHEME dataset in this project. The dataset can be found here: [PHEME](https://figshare.com/articles/PHEME_rumour_scheme_dataset_journalism_use_case/2068650)
+We use two PHEME datasets in this project. The datasets can be found here: [PHEME1](https://figshare.com/articles/PHEME_rumour_scheme_dataset_journalism_use_case/2068650) and [PHEME2](https://figshare.com/articles/PHEME_dataset_of_rumours_and_non-rumours/4010619) 
+
+
 
 ## Files
 - tweet.py : This file defines the Tweet and User data structure along with some useful functions
@@ -20,7 +22,7 @@ We use the PHEME dataset in this project. The dataset can be found here: [PHEME]
 It is easy to get this code working and reproduce our results.
 
 ### Setting up the Development Environment
-1. You will need Python 3. Download the PHEME dataset found here: [PHEME](https://figshare.com/articles/PHEME_rumour_scheme_dataset_journalism_use_case/2068650).
+1. You will need Python 3. Download the PHEME dataset found here [PHEME1](https://figshare.com/articles/PHEME_rumour_scheme_dataset_journalism_use_case/2068650) and here [PHEME2](https://figshare.com/articles/PHEME_dataset_of_rumours_and_non-rumours/4010619).
 
 2. Create a config file called `twitconfig.py` with the access keys from your Twitter application. The contents of the code should be as follows but replacing the values in the dictionary with your individual account values. Add the path to the pheme dataset in this config file.
 ~~~~
@@ -29,7 +31,8 @@ twitter = {'consumer_key': 'L6JvqYzvUeHX36sYTR8O3E7gD',
             'access_token': '1052184206368002049-9RSvx4QK9Js4gnMrMY8GCMvQYYPtPJ',
             'access_token_secret': 'KUykgZdc8vIzDph3CasS91i7foWks8Y6NtLTpBxPTl3BR'
 }
-pheme_path = 'C:\\Users\\EECS\\Documents'
+pheme_path1 = 'C:\\Users\\EECS\\Documents'
+pheme_path2 = 'C:\\Users\\EECS\\Documents'
 ~~~~
 
 3. Install python packages as necessary.
